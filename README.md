@@ -1,4 +1,4 @@
-clientele-training
+clientele Training
 ==================
 
-Training
+ - Lesson 01: CRUD Architecture
