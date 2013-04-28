@@ -1,4 +1,4 @@
-clientele-training
+CRUD Architecture
 ==================
 
 In a CRUD style system the entities are simply read, created, updated and deleted. CRUD works with entities and those entities are changed by retrieving data from a service or database, modifying the data by setting properties, and then sending the data back to the service or database for update. 
