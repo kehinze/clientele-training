@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 
 using AsbaBank.Infrastructure;
@@ -46,8 +47,17 @@ namespace AsbaBank.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.Add(bankCard);
-                return RedirectToAction("Index");
+                try
+                {
+                    repository.Add(bankCard);
+                    repository.Commit();
+                    return RedirectToAction("Index");
+                }
+                catch
+                {
+                    repository.Rollback();
+                    throw;
+                }
             }
 
             return View(bankCard);
@@ -76,8 +86,17 @@ namespace AsbaBank.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.Update(bankCard.Id, bankCard);
-                return RedirectToAction("Index");
+                try
+                {
+                    repository.Update(bankCard.Id, bankCard);
+                    repository.Commit();
+                    return RedirectToAction("Index");
+                }
+                catch
+                {
+                    repository.Rollback();
+                    throw;
+                }
             }
 
             return View(bankCard);
@@ -104,9 +123,17 @@ namespace AsbaBank.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            var bankCard = repository.Get<BankCard>(id);
-            repository.Remove(bankCard);
-            return RedirectToAction("Index");
+            try
+            {
+                var bankCard = repository.Get<BankCard>(id);
+                repository.Remove(bankCard);
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                repository.Rollback();
+                throw;
+            }
         }
     }
 }
