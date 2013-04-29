@@ -59,6 +59,8 @@ namespace AsbaBank
                 ClientId = 1,
                 Disabled = false
             });
+
+            Repository.Commit();
         }
     }
 }
