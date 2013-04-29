@@ -12,9 +12,11 @@ using Newtonsoft.Json;
 
 namespace AsbaBank.Infrastructure
 {
-    /* NB! Do not bother reading this, it is infratstructure code meant to simulate our database. 
+    /* =========================================================================================================
+     * NB! Do not bother reading this, it is infratstructure code meant to simulate our database. 
      * Understanding this code is not required in order to understand the general principles being demonstrated.
-     */
+     * ========================================================================================================= */
+
     public interface IRepository
     {
         IEnumerable<TPersistable> All<TPersistable>() where TPersistable : class;
