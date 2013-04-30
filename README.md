@@ -1,4 +1,4 @@
-clientele Training
+Clientele Training
 ==================
 
 ### Module 1 - Core Concepts
