@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IO;
@@ -13,51 +15,78 @@ using Newtonsoft.Json;
 namespace AsbaBank.Infrastructure
 {
     /* =========================================================================================================
-     * NB! Do not bother reading this, it is infratstructure code meant to simulate our database. 
-     * Understanding this code is not required in order to understand the general principles being demonstrated.
+     * NB! This infratstructure code is meant to simulate using entity framework to access out database.
+     * Understanding this is not required in order to understand the general principles being demonstrated.
      * ========================================================================================================= */
 
-    public interface IRepository
+    public interface IRepository<TEntity> : ICollection<TEntity> where TEntity : class
     {
-        IEnumerable<TPersistable> All<TPersistable>() where TPersistable : class;
-        TPersistable Get<TPersistable>(object id) where TPersistable : class;
-        TPersistable Add<TPersistable>(TPersistable item) where TPersistable : class;
-        TPersistable Remove<TPersistable>(TPersistable item) where TPersistable : class;
-        TPersistable Update<TPersistable>(object id, TPersistable item) where TPersistable : class;
-        void Commit();
-        void Rollback();
+        TEntity Get(object id);
+        void Update(object id, TEntity item);
     }
 
     [DebuggerNonUserCode, DebuggerStepThrough]
-    public sealed class InMemoryRepository : IRepository
+    sealed class InMemoryRepository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        public bool AutoIncrementIds { get; set; }
-        private byte[] committedData;
-        readonly JsonSerializer serializer = new JsonSerializer();
-        private DataStore dataStore = new DataStore();
+        private readonly DataStore dataStore;
+        private readonly ICollection<TEntity> data;
+        private readonly PropertyInfo keyProperty;
 
-        public IEnumerable<TPersistable> All<TPersistable>() where TPersistable : class
+        public int Count { get { return data.Count; } }
+        public bool IsReadOnly { get { return false; } }
+
+        public InMemoryRepository(DataStore dataStore)
         {
-            return dataStore.GetData<TPersistable>();
+            this.dataStore = dataStore;
+            keyProperty = GetKeyProperty<TEntity>();
+            data = dataStore.GetData<TEntity>();
         }
 
-        public void Commit()
+        private static PropertyInfo GetKeyProperty<TPersistable>() where TPersistable : class
         {
-            committedData = serializer.Serialize(dataStore);
+            return typeof(TPersistable)
+                .GetProperties()
+                .Single(propertyInfo => Attribute.IsDefined(propertyInfo, typeof(KeyAttribute)));
         }
 
-        public void Rollback()
+        public IEnumerator<TEntity> GetEnumerator()
         {
-            dataStore = serializer.Deserialize<DataStore>(committedData);
+            return data.GetEnumerator();
+             
         }
 
-        public TPersistable Get<TPersistable>(object id) where TPersistable : class
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            PropertyInfo keyProperty = GetKeyProperty<TPersistable>();
-            Expression<Func<TPersistable, bool>> lambda = BuildLambdaExpressionForKey<TPersistable>(id, keyProperty);
-            IQueryable<TPersistable> collectionQuery = dataStore.GetData<TPersistable>().AsQueryable();
+            return GetEnumerator();
+        }
 
-            return collectionQuery.SingleOrDefault(lambda);
+        public TEntity Get(object id)
+        {
+            Expression<Func<TEntity, bool>> lambda = BuildLambdaExpressionForKey<TEntity>(id, keyProperty);
+            return data.AsQueryable().SingleOrDefault(lambda);
+        }
+
+        public void Update(object id, TEntity item)
+        {
+            TEntity oldItem = Get(id);
+            data.Remove(oldItem);
+            data.Add(item);
+        }
+
+        public void Add(TEntity item)
+        {
+            object key = keyProperty.GetValue(item);
+
+            if (key is Guid)
+            {
+                keyProperty.SetValue(item, Guid.NewGuid());
+            }
+            else
+            {
+                keyProperty.SetValue(item, dataStore.GetNextKey<TEntity>());
+            }
+
+            data.Add(item);
         }
 
         private static Expression<Func<TPersistable, bool>> BuildLambdaExpressionForKey<TPersistable>(object id, PropertyInfo keyProperty) where TPersistable : class
@@ -69,56 +98,58 @@ namespace AsbaBank.Infrastructure
             return Expression.Lambda<Func<TPersistable, bool>>(equalsMethod, parameter);
         }
 
-        private static PropertyInfo GetKeyProperty<TPersistable>() where TPersistable : class
+        public void Clear()
         {
-            return typeof(TPersistable)
-                .GetProperties()
-                .Single(propertyInfo => Attribute.IsDefined(propertyInfo, typeof(KeyAttribute)));
+            data.Clear();
         }
 
-        public TPersistable Add<TPersistable>(TPersistable item) where TPersistable : class
+        public bool Contains(TEntity item)
         {
-            HashSet<TPersistable> collection = dataStore.GetData<TPersistable>();
-
-            if (AutoIncrementIds)
-            {
-                PropertyInfo keyProperty = GetKeyProperty<TPersistable>();
-                object key = keyProperty.GetValue(item);
-
-                if (key is Guid)
-                {
-                    keyProperty.SetValue(item, Guid.NewGuid());
-                }
-                else
-                {
-                    keyProperty.SetValue(item, dataStore.GetNextKey<TPersistable>());
-                }
-            }
-            
-            collection.Add(item);
-            return item;
-        }        
-
-        public TPersistable Remove<TPersistable>(TPersistable item) where TPersistable : class
-        {
-            HashSet<TPersistable> collection = dataStore.GetData<TPersistable>();
-
-            collection.Remove(item);
-            return item;
+            return data.Contains(item);
         }
 
-        public TPersistable Update<TPersistable>(object id, TPersistable item) where TPersistable : class
+        public void CopyTo(TEntity[] array, int arrayIndex)
         {
-            var oldItem = Get<TPersistable>(id);
-            var collection = dataStore.GetData<TPersistable>();
-            collection.Remove(oldItem);
-            collection.Add(item);
-            return item;
+            data.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(TEntity item)
+        {
+            return data.Remove(item);
+        }
+    }
+    
+    public interface IUnitOfWork
+    {
+        void Commit();
+        void Rollback();
+        IRepository<TEntity> GetRepository<TEntity>() where TEntity : class;
+    }
+
+    public class InMemoryUnitOfWork : IUnitOfWork
+    {
+        private byte[] committedData;
+        readonly JsonSerializer serializer = new JsonSerializer();
+        private DataStore dataStore = new DataStore();
+
+        public void Commit()
+        {
+            committedData = serializer.Serialize(dataStore);
+        }
+
+        public void Rollback()
+        {
+            dataStore = serializer.Deserialize<DataStore>(committedData);
+        }
+
+        public IRepository<TEntity> GetRepository<TEntity>() where  TEntity : class 
+        {
+            return new InMemoryRepository<TEntity>(dataStore);
         }
     }
 
     [Serializable]
-    class DataStore
+    internal class DataStore
     {
         public Dictionary<string, object> Data { get; set; }
         public Dictionary<string, int> Keys { get; set; }
@@ -145,7 +176,7 @@ namespace AsbaBank.Infrastructure
 
         public int GetNextKey<TPersistable>() where TPersistable : class
         {
-            string type = typeof(TPersistable).ToString();
+            string type = typeof (TPersistable).ToString();
 
             if (!Keys.ContainsKey(type))
             {
@@ -227,28 +258,29 @@ namespace AsbaBank.Infrastructure
                 throw new SerializationException(e.Message, e);
             }
         }
-    }
 
-    static class SerializeExtensions
-    {
-        public static byte[] Serialize(this JsonSerializer serializer, object value)
+        public byte[] Serialize(object value)
         {
             using (var stream = new MemoryStream())
             {
-                serializer.Serialize(stream, value);
+                Serialize(stream, value);
                 return stream.ToArray();
             }
         }
 
-        public static T Deserialize<T>(this JsonSerializer serializer, byte[] serialized)
+        public T Deserialize<T>(byte[] serialized)
         {
             serialized = serialized ?? new byte[] { };
 
             if (serialized.Length == 0)
+            {
                 return default(T);
+            }
 
             using (var stream = new MemoryStream(serialized))
-                return serializer.Deserialize<T>(stream);
+            {
+                return Deserialize<T>(stream);
+            }
         }
     }
 }

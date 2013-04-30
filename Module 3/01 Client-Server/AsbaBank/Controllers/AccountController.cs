@@ -10,11 +10,18 @@ namespace AsbaBank.Controllers
 {
     public class AccountController : Controller
     {
-        readonly IRepository repository = MvcApplication.Repository;
+        private readonly IUnitOfWork unitOfWork; 
+        private readonly IRepository<Account> repository;
+
+        public AccountController()
+        {
+            unitOfWork = MvcApplication.UnitOfWork;
+            repository = unitOfWork.GetRepository<Account>();
+        }
 
         public ActionResult Index()
         {
-            return View(repository.All<Account>().ToList());
+            return View(repository);
         }
 
         //
@@ -22,7 +29,7 @@ namespace AsbaBank.Controllers
 
         public ActionResult Details(int id = 0)
         {
-            var account = repository.Get<Account>(id);
+            var account = repository.Get(id);
 
             if (account == null)
             {
@@ -51,12 +58,12 @@ namespace AsbaBank.Controllers
                 try
                 {
                     repository.Add(account);
-                    repository.Commit();
+                    unitOfWork.Commit();
                     return RedirectToAction("Index");
                 }
                 catch
                 {
-                    repository.Rollback();
+                    unitOfWork.Rollback();
                     throw;
                 }
             }
@@ -69,7 +76,7 @@ namespace AsbaBank.Controllers
 
         public ActionResult Edit(int id = 0)
         {
-            var account = repository.Get<Account>(id);
+            var account = repository.Get(id);
 
             if (account == null)
             {
@@ -90,12 +97,12 @@ namespace AsbaBank.Controllers
                 try
                 {
                     repository.Update(account.Id, account);
-                    repository.Commit();
+                    unitOfWork.Commit();
                     return RedirectToAction("Index");
                 }
                 catch
                 {
-                    repository.Rollback();
+                    unitOfWork.Rollback();
                     throw;
                 }
             }
@@ -108,7 +115,7 @@ namespace AsbaBank.Controllers
 
         public ActionResult Delete(int id = 0)
         {
-            var account = repository.Get<Account>(id);
+            var account = repository.Get(id);
 
             if (account == null)
             {
@@ -126,14 +133,14 @@ namespace AsbaBank.Controllers
         {
             try
             {
-                var account = repository.Get<Account>(id);
+                var account = repository.Get(id);
                 repository.Remove(account);
-                repository.Commit();
+                unitOfWork.Commit();
                 return RedirectToAction("Index");
             }
             catch
             {
-                repository.Rollback();
+                unitOfWork.Rollback();
                 throw;
             }
         }

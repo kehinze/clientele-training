@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
+﻿using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -17,7 +13,7 @@ namespace AsbaBank
     {
         //As some members of our class are not yet familiar with Entity framework, we use a in memeory repository. 
         //This is declared static on the Mvc Applicatioon so that state is not lost between requests. 
-        public static InMemoryRepository Repository { get; set; }
+        public static IUnitOfWork UnitOfWork { get; set; }
 
         protected void Application_Start()
         {
@@ -32,9 +28,10 @@ namespace AsbaBank
 
         private void InitSeedData()
         {
-            Repository = new InMemoryRepository { AutoIncrementIds = true };
+            UnitOfWork = new InMemoryUnitOfWork();
 
-            Repository.Add(new Client
+            UnitOfWork.GetRepository<Client>()
+                .Add(new Client
             {
                 ClientName = "Adrian Freemantle",
                 Email = "adrian@synerics.com",
@@ -45,7 +42,8 @@ namespace AsbaBank
                 PostalCode = "0001"
             });
 
-            Repository.Add(new Account
+            UnitOfWork.GetRepository<Account>()
+                .Add(new Account
             {
                 AccountNumber = "1048163555",
                 Balance = 1000,
@@ -53,14 +51,15 @@ namespace AsbaBank
                 ClientId = 1
             });
 
-            Repository.Add(new BankCard
+            UnitOfWork.GetRepository<BankCard>()
+                .Add(new BankCard
             {
                 AccountId = 1,
                 ClientId = 1,
                 Disabled = false
             });
 
-            Repository.Commit();
+            UnitOfWork.Commit();
         }
     }
 }

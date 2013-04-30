@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 using AsbaBank.Infrastructure;
 using AsbaBank.Models;
@@ -9,11 +7,18 @@ namespace AsbaBank.Controllers
 {
     public class BankCardController : Controller
     {
-        readonly IRepository repository = MvcApplication.Repository;
+        private readonly IUnitOfWork unitOfWork; 
+        private readonly IRepository<BankCard> repository;
+
+        public BankCardController()
+        {
+            unitOfWork = MvcApplication.UnitOfWork;
+            repository = unitOfWork.GetRepository<BankCard>();
+        }
 
         public ActionResult Index()
         {
-            return View(repository.All<BankCard>().ToList());
+            return View(repository);
         }
 
         //
@@ -21,7 +26,7 @@ namespace AsbaBank.Controllers
 
         public ActionResult Details(int id = 0)
         {
-            var bankCard = repository.Get<BankCard>(id);
+            var bankCard = repository.Get(id);
 
             if (bankCard == null)
             {
@@ -50,12 +55,12 @@ namespace AsbaBank.Controllers
                 try
                 {
                     repository.Add(bankCard);
-                    repository.Commit();
+                    unitOfWork.Commit();
                     return RedirectToAction("Index");
                 }
                 catch
                 {
-                    repository.Rollback();
+                    unitOfWork.Rollback();
                     throw;
                 }
             }
@@ -68,7 +73,7 @@ namespace AsbaBank.Controllers
 
         public ActionResult Edit(int id = 0)
         {
-            var bankCard = repository.Get<BankCard>(id);
+            var bankCard = repository.Get(id);
 
             if (bankCard == null)
             {
@@ -89,12 +94,12 @@ namespace AsbaBank.Controllers
                 try
                 {
                     repository.Update(bankCard.Id, bankCard);
-                    repository.Commit();
+                    unitOfWork.Commit();
                     return RedirectToAction("Index");
                 }
                 catch
                 {
-                    repository.Rollback();
+                    unitOfWork.Rollback();
                     throw;
                 }
             }
@@ -107,7 +112,7 @@ namespace AsbaBank.Controllers
 
         public ActionResult Delete(int id = 0)
         {
-            var bankCard = repository.Get<BankCard>(id);
+            var bankCard = repository.Get(id);
 
             if (bankCard == null)
             {
@@ -125,13 +130,14 @@ namespace AsbaBank.Controllers
         {
             try
             {
-                var bankCard = repository.Get<BankCard>(id);
+                var bankCard = repository.Get(id);
                 repository.Remove(bankCard);
+                unitOfWork.Commit();
                 return RedirectToAction("Index");
             }
             catch
             {
-                repository.Rollback();
+                unitOfWork.Rollback();
                 throw;
             }
         }
