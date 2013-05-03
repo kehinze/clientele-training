@@ -1,6 +1,8 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using AsbaBank.Domain;
 using AsbaBank.Domain.Models;
+using AsbaBank.Presentation.Mvc.Forms;
 
 namespace AsbaBank.Presentation.Mvc.Controllers
 {
@@ -18,9 +20,6 @@ namespace AsbaBank.Presentation.Mvc.Controllers
             return View(accountService.GetAll());
         }
 
-        //
-        // GET: /Account/Details/5
-
         public ActionResult Details(int id = 0)
         {
             var account = accountService.Get(id);
@@ -33,33 +32,30 @@ namespace AsbaBank.Presentation.Mvc.Controllers
             return View(account);
         }
 
-        //
-        // GET: /Account/Create
-
         public ActionResult Create()
         {
             return View();
         }
-
-        //
-        // POST: /Account/Create
 
         [HttpPost]
         public ActionResult Create(Account account)
         {
             if (ModelState.IsValid)
             {
-                var newAccount = accountService.Create(account);
-                return View("Details", newAccount);
+                accountService.Create(account);
+                return RedirectToAction("Index");
             }
 
             return View(account);
         }
 
-        //
-        // GET: /Account/Edit/5
+        public ActionResult Close(int id = 0)
+        {
+            accountService.Close(id);
+            return RedirectToAction("Index");
+        }
 
-        public ActionResult Edit(int id = 0)
+        public ActionResult Debit(int id = 0)
         {
             var account = accountService.Get(id);
 
@@ -68,28 +64,57 @@ namespace AsbaBank.Presentation.Mvc.Controllers
                 return HttpNotFound();
             }
 
-            return View(account);
+            return View(new AccountDebitForm
+            {
+                AccountId = account.Id,
+                DebitAmount = 0
+            });
         }
 
-        //
-        // POST: /Account/Edit/5
-
         [HttpPost]
-        public ActionResult Edit(Account account)
+        public ActionResult Debit(AccountDebitForm form)
         {
             if (ModelState.IsValid)
             {
-                var updatedAccount = accountService.Update(account);
-                return View("Details", updatedAccount);
+                accountService.Debit(form.AccountId, form.DebitAmount);
+                return RedirectToAction("Index");
             }
 
-            return View(account);
+            return View("Debit", form);
         }
 
-        public ActionResult Close(int id = 0)
+        public ActionResult Credit(int id = 0)
         {
-            var account = accountService.Close(id);
-            return View("Details", account);
+            var account = accountService.Get(id);
+
+            if (account == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(new AccountCreditForm
+            {
+                AccountId = account.Id,
+                CreditAmount = 0
+            });
         }
+
+        [HttpPost]
+        public ActionResult Credit(AccountCreditForm form)
+        {
+            if (ModelState.IsValid)
+            {
+                accountService.Credit(form.AccountId, form.CreditAmount);
+                return RedirectToAction("Index");
+            }
+            
+            return View("Credit", form);
+        }
+
+        public ActionResult IssueBankCard(int id = 0)
+        {
+            BankCard bankCard = accountService.IssueBankCard(id);
+            return RedirectToAction("Details", "BankCard", bankCard);
+        }        
     }
 }

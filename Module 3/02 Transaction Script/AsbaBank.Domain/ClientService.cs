@@ -59,41 +59,5 @@ namespace AsbaBank.Domain
                 throw;
             }
         }
-
-        public Client Deactivate(int clientId)
-        {
-            try
-            {
-                var clientRepository = unitOfWork.GetRepository<Client>();
-                var client = clientRepository.Get(clientId);
-                client.Active = false;
-
-                var accountRepository = unitOfWork.GetRepository<Account>();
-                var bankCardRepository = unitOfWork.GetRepository<BankCard>();
-                var clientAccounts = accountRepository.Where(account => account.ClientId == clientId);
-
-                foreach (var account in clientAccounts)
-                {
-                    account.Closed = true;
-                    var bankCard = bankCardRepository.SingleOrDefault(card => card.AccountId == account.Id && card.Disabled == false);
-
-                    if (bankCard != null)
-                    {
-                        bankCard.Disabled = true;
-                    }
-                }
-
-                Validator.ValidateObject(client, new ValidationContext(client));
-                unitOfWork.Commit();
-                return client;
-
-            }
-            catch 
-            {
-                unitOfWork.Rollback();
-                throw;
-            }
-            
-        }        
     }
 }

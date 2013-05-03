@@ -42,7 +42,5 @@ namespace AsbaBank.Domain.Models
         [Display(Name = "Email Address")]
         [Email(ErrorMessage = "Please provide a valid email address.")]
         public virtual string Email { get; set; }
-
-        public virtual bool Active { get; set; }
     }
 }

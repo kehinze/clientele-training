@@ -15,9 +15,6 @@
             @Html.DisplayNameFor(model => model.Id)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ClientId)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.AccountNumber)
         </th>
         <th>
@@ -35,9 +32,6 @@
             @Html.DisplayFor(modelItem => item.Id)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.ClientId)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.AccountNumber)
         </td>
         <td>
@@ -48,7 +42,9 @@
         </td>
         <td>
             @Html.ActionLink("Close", "Close", new { id=item.Id }) |
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Debit", "Debit", new { id=item.Id }) |
+            @Html.ActionLink("Credit", "Credit", new { id=item.Id }) |
+            @Html.ActionLink("Issue Card", "IssueBankCard", new { id=item.Id }) |
             @Html.ActionLink("Details", "Details", new { id=item.Id }) 
         </td>
     </tr>

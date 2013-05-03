@@ -39,7 +39,6 @@ namespace AsbaBank.Presentation.Mvc
                 City = "Sandton",
                 StreetNumber = "9",
                 PostalCode = "0001",
-                Active = true
             });
 
             UnitOfWork.GetRepository<Account>()

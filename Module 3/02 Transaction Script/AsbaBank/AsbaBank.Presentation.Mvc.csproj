@@ -145,6 +145,8 @@
     <Compile Include="Controllers\BankCardController.cs" />
     <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Forms\AccountCreditForm.cs" />
+    <Compile Include="Forms\AccountDebitForm.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -266,11 +268,12 @@
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Account\Details.cshtml" />
     <Content Include="Views\Account\Create.cshtml" />
-    <Content Include="Views\Account\Edit.cshtml" />
     <Content Include="Views\BankCard\Index.cshtml" />
     <Content Include="Views\BankCard\Details.cshtml" />
     <Content Include="Views\BankCard\Create.cshtml" />
     <Content Include="Views\BankCard\Edit.cshtml" />
+    <Content Include="Views\Account\Credit.cshtml" />
+    <Content Include="Views\Account\Debit.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

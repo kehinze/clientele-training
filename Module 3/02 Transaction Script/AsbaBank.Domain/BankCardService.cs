@@ -25,38 +25,36 @@ namespace AsbaBank.Domain
         {
             var bankCardRepository = unitOfWork.GetRepository<BankCard>();
             return bankCardRepository.Get(bankCardId);
-        }
+        }        
 
-        public BankCard NewBankCard(int accountId)
+        public Account Withdraw(int cardId, decimal amount)
         {
             try
             {
+                var bankCardRepository = unitOfWork.GetRepository<BankCard>();
+                var bankCard = bankCardRepository.Get(cardId);
+
+                if (bankCard.Disabled)
+                {
+                    throw new ValidationException("The bank card is disabled.");
+                }
+
                 var accountRepository = unitOfWork.GetRepository<Account>();
-                var account = accountRepository.Get(accountId);
+                var account = accountRepository.Get(bankCard.AccountId);
 
                 if (account.Closed)
                 {
-                    throw new ValidationException("The account is closed");
+                    throw new ValidationException("The account is closed.");
                 }
 
-                var bankCardRepository = unitOfWork.GetRepository<BankCard>();
-
-                if (bankCardRepository.Any(card => card.AccountId == accountId && !card.Disabled))
+                if (account.Balance < amount)
                 {
-                    throw new ValidationException("An account may only have one active bank card at a time.");
+                    throw new ValidationException("Insufficient balance.");
                 }
 
-                var newBankCard = new BankCard
-                {
-                    AccountId = accountId,
-                    Disabled = false,
-                };
-
-                Validator.ValidateObject(newBankCard, new ValidationContext(newBankCard));
-
-                bankCardRepository.Add(newBankCard);
+                account.Balance -= amount;
                 unitOfWork.Commit();
-                return newBankCard;
+                return account;
             }
             catch
             {
@@ -65,7 +63,7 @@ namespace AsbaBank.Domain
             }
         }
 
-        public BankCard DisableBankCard(int bankCardId)
+        public BankCard Disable(int bankCardId)
         {
             try
             {

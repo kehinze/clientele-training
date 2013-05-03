@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AsbaBank.Domain.Models;
 using AsbaBank.Infrastructure;
 
@@ -33,18 +31,18 @@ namespace AsbaBank.Domain
         {
             try
             {
+                var clientRepository = unitOfWork.GetRepository<Client>();
+
+                if(clientRepository.All(client => client.Id != account.ClientId))
+                {
+                    throw new ValidationException("The provided client id does not exist.");
+                }
+
                 var accountRepository = unitOfWork.GetRepository<Account>();
 
                 if (accountRepository.Any(a => a.AccountNumber == account.AccountNumber))
                 {
                     throw new ValidationException("The account already exists.");
-                }
-
-                var clientRepository = unitOfWork.GetRepository<Client>();
-
-                if (clientRepository.Any(client => client.Id == account.ClientId && !client.Active))
-                {
-                    throw new ValidationException("Unable to open an account for a client that is not active.");
                 }
 
                 accountRepository.Add(account);
@@ -58,13 +56,85 @@ namespace AsbaBank.Domain
             }
         }
 
-        public Account Update(Account account)
+        public BankCard IssueBankCard(int accountId)
         {
             try
             {
                 var accountRepository = unitOfWork.GetRepository<Account>();
-                Validator.ValidateObject(account, new ValidationContext(account));
-                accountRepository.Update(account.Id, account);
+                var account = accountRepository.Get(accountId);
+
+                if (account.Closed)
+                {
+                    throw new ValidationException("The account is closed");
+                }
+
+                var bankCardRepository = unitOfWork.GetRepository<BankCard>();
+
+                if (bankCardRepository.Any(card => card.AccountId == accountId && !card.Disabled))
+                {
+                    throw new ValidationException("An account may only have one active bank card at a time.");
+                }
+
+                var newBankCard = new BankCard
+                {
+                    AccountId = accountId,
+                    Disabled = false,
+                };
+
+                Validator.ValidateObject(newBankCard, new ValidationContext(newBankCard));
+
+                bankCardRepository.Add(newBankCard);
+                unitOfWork.Commit();
+                return newBankCard;
+            }
+            catch
+            {
+                unitOfWork.Rollback();
+                throw;
+            }
+        }
+
+        public Account Credit(int accountId, decimal amount)
+        {
+            try
+            {
+                var accountRepository = unitOfWork.GetRepository<Account>();
+                var account = accountRepository.Get(accountId);
+
+                if (account.Closed)
+                {
+                    throw new ValidationException("The account is closed");
+                }
+
+                account.Balance += amount;
+                unitOfWork.Commit();
+                return account;
+            }
+            catch 
+            {
+                unitOfWork.Rollback();
+                throw;
+            }
+        }
+
+        public Account Debit(int accountId, decimal amount)
+        {
+            try
+            {
+                var accountRepository = unitOfWork.GetRepository<Account>();
+                var account = accountRepository.Get(accountId);
+
+                if (account.Closed)
+                {
+                    throw new ValidationException("The account is closed");
+                }
+
+                if (account.Balance < amount)
+                {
+                    throw new ValidationException("Insufficient balance.");
+                }
+
+                account.Balance -= amount;
                 unitOfWork.Commit();
                 return account;
             }
@@ -90,7 +160,6 @@ namespace AsbaBank.Domain
                 account.Closed = true;
 
                 var bankCardRepository = unitOfWork.GetRepository<BankCard>();
-
                 var bankCard = bankCardRepository.SingleOrDefault(card => card.AccountId == account.Id && card.Disabled == false);
 
                 if (bankCard != null)
