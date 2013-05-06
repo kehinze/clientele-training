@@ -1,12 +1,12 @@
-CRUD Architecture
+Transaction Script
 ==================
 
-In CRUD or Client-Server style systems the entities are simply read, created, updated and deleted. CRUD works with entities that are changed by retrieving data from a service or database, modifying the data by setting properties, and then sending the data back to the service or database for update. 
+The simplest approach to storing domain logic is the Transaction Script. A Transaction Script is essentially a procedure that takes the input from the presentation, processes it with validations and calculations, stores data in the database, and invokes any operations from other systems. It then replies with more data to the presentation, perhaps doing more calculation to help organize and format the reply. 
 
-CRUD is data-oriented. We don’t perform a specific business action, just ask the service or database to create, delete or update the entity by giving the service or database the new data for that entity. If more needs to be done, the service analyses the data changes to determine what action to take.
+The fundamental organization is of a single procedure for each action that a user might want to do. Hence, we can think of this pattern as being a script for an action, or business transaction. It doesn't have to be a single inline procedure of code. Pieces get separated into subroutines, and these subroutines can be shared between different Transaction Scripts. However, the driving force is still that of a procedure for each action, so a retailing system might have Transaction Scripts for checkout, for adding something to the shopping cart, for displaying delivery status, and so on.
 
 ## Homework
-- What are some of the strengths of a CRUD system?
-- What are some of the weaknesses of a CRUD system?
-- When would we consider this design for a system?
+- What are some of the strengths of the Transaction Script pattern?
+- What are some of the weaknesses of the Transaction Script pattern?
+- When would we consider Transaction Script?
 
