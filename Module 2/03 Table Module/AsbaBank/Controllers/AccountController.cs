@@ -30,6 +30,7 @@ namespace AsbaBank.Presentation.Mvc.Controllers
         public ActionResult Index()
         {
             IEnumerable<AccountViewModel> accountViewModels = AccountViewModelBuilder.Build(accountModule);
+          
             return View(accountViewModels);
         }
 
@@ -42,8 +43,17 @@ namespace AsbaBank.Presentation.Mvc.Controllers
 
         public ActionResult Close(int id = 0)
         {
-            accountModule.Close(id);
-            return RedirectToAction("Index");
+            try
+            {
+                accountModule.Close(id);
+                unitOfWork.Commit();
+                return RedirectToAction("Index");
+            }
+            catch 
+            {
+                unitOfWork.Rollback();
+                throw;
+            }
         }
 
         public ActionResult Debit(int id = 0)
