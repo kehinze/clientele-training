@@ -10,7 +10,13 @@ Clientele Training
 * Distribution Strategies
 * Putting It all Together
 
-### Module 2 - Core Patterns
+### Module 2 - Archetypical Architectures
+* Client-Server
+* Transaction Script
+* Table Module
+* Domain Model
+
+### Module 3 - Core Patterns
 * Command
 * Event Aggregator
 * Observer
@@ -24,12 +30,6 @@ Clientele Training
 * Separated Interface
 * Unit of Work
 * Model View Controller
-
-### Module 3 - Archetypical Architectures
-* Client-Server
-* Transaction Script
-* Table Module
-* Domain Model
 
 ### Module 4 - Unit Testing
 * Writing Unit Tests
