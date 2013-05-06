@@ -10,7 +10,7 @@ Clientele Training
 * Distribution Strategies
 * Putting It all Together
 
-### Module 2 - Archetypical Architectures
+### Module 2 - Organizing Domain Logic
 * Client-Server
 * Transaction Script
 * Table Module
