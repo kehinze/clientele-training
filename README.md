@@ -38,8 +38,8 @@ Clientele Training
 * Behaviour Driven Development
 
 ### Module 5 – Domain Driven Design
-* Getting Started With DDD
-* Domains, Subdomains and Bounded Contexts
+* Ubiquitous Language
+* Domains and Subdomains
 * Architecture
 * Commands and Queries
 * Application
