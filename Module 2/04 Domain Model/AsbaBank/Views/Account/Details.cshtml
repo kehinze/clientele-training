@@ -39,13 +39,21 @@
 </div>
 @if (!Model.Closed)
 { 
-    <span>
-        @Html.ActionLink("Debit Account", "Debit", new { id=Model.Id }) |
-        @Html.ActionLink("Credit Account", "Credit", new { id=Model.Id }) |
-        @Html.ActionLink("Issue Bank Card", "IssueBankCard", new { id=Model.Id }) |
-        @Html.ActionLink("Stop Bank Card", "StopBankCard", new { id=Model.Id }) | 
-        @Html.ActionLink("Close Account", "Close", new { id=Model.Id })
-    </span>
+    <form action="@Url.Action("Debit", new { id=Model.Id })" method="GET" style="display: inline">
+        <input type="submit" value="Debit Account" class="btn btn-primary">
+    </form>
+    <form action="@Url.Action("Credit", new { id=Model.Id })" method="GET" style="display: inline">
+        <input type="submit" value="Credit Account" class="btn btn-primary">
+    </form>
+    <form action="@Url.Action("IssueBankCard", new { id=Model.Id })" method="POST" style="display: inline">
+        <input type="submit" value="Issue Bank Card" class="btn btn-primary">
+    </form>
+    <form action="@Url.Action("StopBankCard", new { id=Model.Id })" method="POST" style="display: inline">
+        <input type="submit" value="Stop Bank Card" class="btn btn-primary">
+    </form>
+    <form action="@Url.Action("Close", new { id=Model.Id })" method="POST" style="display: inline">
+        <input type="submit" value="Close Account" class="btn btn-primary">
+    </form>
 }
  
 <h2>Bank Cards</h2>

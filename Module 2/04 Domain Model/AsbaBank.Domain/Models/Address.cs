@@ -17,7 +17,7 @@ namespace AsbaBank.Domain.Models
 
         protected Address()
         {
-            
+            //here for the deserializer
         }
 
         public Address(string streetNumber, string street, string postalCode, string city)
@@ -26,7 +26,6 @@ namespace AsbaBank.Domain.Models
             ValidateInput("street", street);
             ValidateInput("postal code", postalCode);
             ValidateInput("city", city);
-
         }
 
         public static Address NullAddress()

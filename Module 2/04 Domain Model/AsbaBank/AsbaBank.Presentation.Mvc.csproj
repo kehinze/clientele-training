@@ -151,8 +151,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModelBuilders\ClientViewModelBuilder.cs" />
     <Compile Include="ViewModels\AccountViewModel.cs" />
     <Compile Include="ViewModelBuilders\AccountViewModelBuilder.cs" />
+    <Compile Include="ViewModels\ClientViewModel.cs" />
+    <Compile Include="ViewModels\SimpleAccountViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-responsive.css" />
@@ -265,7 +268,7 @@
     <None Include="readme.txt" />
     <Content Include="Views\Client\Index.cshtml" />
     <Content Include="Views\Client\Details.cshtml" />
-    <Content Include="Views\Client\Create.cshtml" />
+    <Content Include="Views\Client\Register.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Account\Details.cshtml" />
     <Content Include="Views\Account\Credit.cshtml" />

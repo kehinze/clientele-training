@@ -2,6 +2,7 @@
 using AsbaBank.Domain.Models;
 using AsbaBank.Infrastructure;
 using AsbaBank.Presentation.Mvc.Forms;
+using AsbaBank.Presentation.Mvc.ViewModelBuilders;
 
 namespace AsbaBank.Presentation.Mvc.Controllers
 {
@@ -9,11 +10,13 @@ namespace AsbaBank.Presentation.Mvc.Controllers
     {
         private readonly IRepository<Client> clientRepository;
         private readonly IUnitOfWork unitOfWork;
+        private readonly ClientViewModelBuilder viewModelBuilder;
 
         public ClientController()
         {
             unitOfWork = MvcApplication.UnitOfWork;
             clientRepository = unitOfWork.GetRepository<Client>();
+            viewModelBuilder = new ClientViewModelBuilder(unitOfWork.GetRepository<Account>());
         }
 
         public ActionResult Index()
@@ -30,16 +33,16 @@ namespace AsbaBank.Presentation.Mvc.Controllers
                 return HttpNotFound();
             }
 
-            return View(client);
+            return View(viewModelBuilder.Build(client));
         }
 
-        public ActionResult Create()
+        public ActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
-        public ActionResult Create(NewClientForm clientForm)
+        public ActionResult Register(NewClientForm clientForm)
         {
             if (ModelState.IsValid)
             {
@@ -58,11 +61,6 @@ namespace AsbaBank.Presentation.Mvc.Controllers
             }
 
             return View(clientForm);
-        }
-
-        public ActionResult OpenAccount(int id)
-        {
-            return RedirectToAction("OpenAccount", "Account", new { clientId = id });
         }
     }
 }

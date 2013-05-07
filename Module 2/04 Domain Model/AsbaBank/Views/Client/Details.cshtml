@@ -1,4 +1,4 @@
-﻿@model AsbaBank.Domain.Models.Client
+﻿@model AsbaBank.Presentation.Mvc.ViewModels.ClientViewModel
 
 @{
     ViewBag.Title = "Details";
@@ -30,34 +30,82 @@
         </dd>
 
         <dt>
-             Street Number
-         </dt>
+            Street Number
+        </dt>
         <dd>
-            @Model.Address.StreetNumber
+            @Model.StreetNumber
         </dd>
 
         <dt>
             Street
         </dt>
         <dd>
-            @Model.Address.Street
+            @Model.Street
         </dd>
 
         <dt>
             City
         </dt>
         <dd>
-            @Model.Address.City
+            @Model.City
         </dd>
 
         <dt>
             Postal Code
         </dt>
         <dd>
-            @Model.Address.PostalCode
+            @Model.PostalCode
         </dd>
     </dl>
 </div>
+<form action="@Url.Action("OpenAccount", "Account", new { clientId=Model.Id })" method="POST" style="display: inline">
+    <input type="submit" value="Open Account" class="btn btn-primary">
+</form>
+
+<h2>Accounts</h2>
+
+<div class="well">
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                Account Number
+            </th>
+            <th>
+                Balance
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+            </th>
+        </tr>
+
+        @foreach (var item in Model.Accounts)
+        {
+            <tr>
+                <td>
+                    @item.Id
+                </td>
+                <td>
+                    @item.AccountNumber
+                </td>
+                <td>
+                    @item.Balance
+                </td>
+                <td>
+                    @item.Status
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", "Account", new {id=item.Id}, new {})
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
 <p>
     @Html.ActionLink("Back to List", "Index")
 </p>

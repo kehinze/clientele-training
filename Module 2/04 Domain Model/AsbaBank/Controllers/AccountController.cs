@@ -36,6 +36,7 @@ namespace AsbaBank.Presentation.Mvc.Controllers
             return View(viewModel);
         }
 
+        [HttpPost]
         public ActionResult Close(int id = 0)
         {
             try
@@ -128,6 +129,7 @@ namespace AsbaBank.Presentation.Mvc.Controllers
             return View("Credit", form);
         }
 
+        [HttpPost]
         public ActionResult OpenAccount(int clientId)
         {
             try
@@ -135,7 +137,7 @@ namespace AsbaBank.Presentation.Mvc.Controllers
                 Account account = Account.OpenAccount(clientId);
                 accountRepository.Add(account);
                 unitOfWork.Commit();
-                return RedirectToAction("Details", new {id = account.Id});
+                return RedirectToAction("Details", "Client", new {id = clientId});
             }
             catch
             {
@@ -144,6 +146,7 @@ namespace AsbaBank.Presentation.Mvc.Controllers
             }
         }
 
+        [HttpPost]
         public ActionResult IssueBankCard(int id = 0)
         {
             try
@@ -160,6 +163,7 @@ namespace AsbaBank.Presentation.Mvc.Controllers
             }
         }
 
+        [HttpPost]
         public ActionResult StopBankCard(int id = 0)
         {
             try
