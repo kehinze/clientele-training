@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using AsbaBank.Domain.Models;
 using AsbaBank.Infrastructure;
 using AsbaBank.Presentation.Mvc.Forms;
@@ -14,7 +15,7 @@ namespace AsbaBank.Presentation.Mvc.Controllers
 
         public ClientController()
         {
-            unitOfWork = MvcApplication.UnitOfWork;
+            unitOfWork = new InMemoryUnitOfWork(MvcApplication.DataStore);
             clientRepository = unitOfWork.GetRepository<Client>();
             viewModelBuilder = new ClientViewModelBuilder(unitOfWork.GetRepository<Account>());
         }

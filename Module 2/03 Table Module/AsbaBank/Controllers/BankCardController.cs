@@ -17,7 +17,7 @@ namespace AsbaBank.Presentation.Mvc.Controllers
 
         public BankCardController()
         {
-            unitOfWork = MvcApplication.UnitOfWork;
+            unitOfWork = new InMemoryUnitOfWork(MvcApplication.DataStore);
             var accountRepository = unitOfWork.GetRepository<Account>();
             var clientModule = new ClientModule(unitOfWork.GetRepository<Client>());
             var transactionModule = new TransactionModule(unitOfWork.GetRepository<Transaction>());

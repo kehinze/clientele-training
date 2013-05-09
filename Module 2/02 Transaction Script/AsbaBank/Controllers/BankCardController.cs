@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using AsbaBank.Domain;
+using AsbaBank.Infrastructure;
 using AsbaBank.Presentation.Mvc.ViewModelBuilders;
 using AsbaBank.Presentation.Mvc.ViewModels;
 
@@ -12,7 +13,7 @@ namespace AsbaBank.Presentation.Mvc.Controllers
 
         public BankCardController()
         {
-            bankCardService = new BankCardService(MvcApplication.UnitOfWork);
+            bankCardService = new BankCardService(new InMemoryUnitOfWork(MvcApplication.DataStore));
         }
 
         public ActionResult Index()

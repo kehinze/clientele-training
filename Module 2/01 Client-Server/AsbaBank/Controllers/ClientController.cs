@@ -14,7 +14,7 @@ namespace AsbaBank.Controllers
 
         public ClientController()
         {
-            unitOfWork = MvcApplication.UnitOfWork;
+            unitOfWork = new InMemoryUnitOfWork(MvcApplication.DataStore);
             repository = unitOfWork.GetRepository<Client>();
         }
 

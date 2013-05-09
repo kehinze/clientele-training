@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using AsbaBank.Domain;
 using AsbaBank.Domain.Models;
+using AsbaBank.Infrastructure;
 
 namespace AsbaBank.Presentation.Mvc.Controllers
 {
@@ -10,7 +11,7 @@ namespace AsbaBank.Presentation.Mvc.Controllers
 
         public ClientController()
         {
-            clientService = new ClientService(MvcApplication.UnitOfWork);
+            clientService = new ClientService(new InMemoryUnitOfWork(MvcApplication.DataStore));
         }
 
         public ActionResult Index()

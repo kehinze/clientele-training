@@ -10,9 +10,9 @@ namespace AsbaBank.Presentation.Mvc
 {
     public class MvcApplication : System.Web.HttpApplication
     {
-        //As some members of our class are not yet familiar with Entity framework, we use a in memeory repository. 
+        //As some members of our class are not yet familiar with Entity framework, we use a in memory data store. 
         //This is declared static on the Mvc Applicatioon so that state is not lost between requests. 
-        public static IUnitOfWork UnitOfWork { get; set; }
+        public static InMemoryDataStore DataStore { get; set; }
 
         protected void Application_Start()
         {
@@ -27,9 +27,10 @@ namespace AsbaBank.Presentation.Mvc
 
         private void InitSeedData()
         {
-            UnitOfWork = new InMemoryUnitOfWork();
+            DataStore = new InMemoryDataStore();
+            var unitOfWork = new InMemoryUnitOfWork(DataStore);
 
-            UnitOfWork.GetRepository<Client>()
+            unitOfWork.GetRepository<Client>()
                 .Add(new Client
             {
                 ClientName = "Adrian Freemantle",
@@ -41,7 +42,7 @@ namespace AsbaBank.Presentation.Mvc
                 PostalCode = "0001",
             });
 
-            UnitOfWork.Commit();
+            unitOfWork.Commit();
         }
     }
 }

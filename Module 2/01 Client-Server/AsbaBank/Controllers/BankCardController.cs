@@ -12,7 +12,7 @@ namespace AsbaBank.Controllers
 
         public BankCardController()
         {
-            unitOfWork = MvcApplication.UnitOfWork;
+            unitOfWork = new InMemoryUnitOfWork(MvcApplication.DataStore);
             repository = unitOfWork.GetRepository<BankCard>();
         }
 

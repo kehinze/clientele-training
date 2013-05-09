@@ -13,7 +13,7 @@ namespace AsbaBank.Presentation.Mvc.Controllers
 
         public ClientController()
         {
-            unitOfWork = MvcApplication.UnitOfWork;
+            unitOfWork = new InMemoryUnitOfWork(MvcApplication.DataStore);
             clientModule = new ClientModule(unitOfWork.GetRepository<Client>());
         }
 

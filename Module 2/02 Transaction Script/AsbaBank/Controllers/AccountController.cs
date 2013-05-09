@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using AsbaBank.Domain;
 using AsbaBank.Domain.Models;
+using AsbaBank.Infrastructure;
 using AsbaBank.Presentation.Mvc.Forms;
 using AsbaBank.Presentation.Mvc.ViewModelBuilders;
 using AsbaBank.Presentation.Mvc.ViewModels;
@@ -16,7 +17,7 @@ namespace AsbaBank.Presentation.Mvc.Controllers
 
         public AccountController()
         {
-            accountService = new AccountService(MvcApplication.UnitOfWork);
+            accountService = new AccountService(new InMemoryUnitOfWork(MvcApplication.DataStore));
         }
 
         public ActionResult Index()
