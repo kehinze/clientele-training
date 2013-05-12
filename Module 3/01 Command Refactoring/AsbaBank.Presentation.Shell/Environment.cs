@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using AsbaBank.Infrastructure;
+using AsbaBank.Infrastructure.Implementations.InMemory;
+using AsbaBank.Infrastructure.Implementations.Logger;
+using AsbaBank.Infrastructure.Interfaces;
 using AsbaBank.Presentation.Shell.Commands;
 
 namespace AsbaBank.Presentation.Shell

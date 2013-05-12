@@ -1,6 +1,10 @@
 ﻿using System;
 using AsbaBank.Domain;
 using AsbaBank.Domain.Models;
+using AsbaBank.Presentation.Shell.Startup;
+using Ninject;
+using AsbaBank.Infrastructure.Repositories;
+using AsbaBank.Infrastructure.Interfaces;
 
 namespace AsbaBank.Presentation.Shell.Commands
 {
@@ -31,26 +35,31 @@ namespace AsbaBank.Presentation.Shell.Commands
             ClientSurname = clientSurname;
             PhoneNumber = phoneNumber;
         }
-
+        
         public void Execute()
         {
-            //getting the unit of work like this is not ideal. Think of ways that we could solve this.
-            var unitOfWork = Environment.GetUnitOfWork(); 
-            var clientRepository = unitOfWork.GetRepository<Client>();
-
-            try
+            using (var kernel = new StandardKernel(new AbsaBankModules()))
             {
-                var client = new Client(ClientName, ClientSurname, PhoneNumber);
-                clientRepository.Add(client);
-                unitOfWork.Commit();
+                var unitOfWork = kernel.Get<IUnitOfWork>();
+                var clientRepository = kernel.Get<IClientRepository>();
 
-                Environment.Logger.Verbose("Registered client {0} {1} with Id {2}", client.Name, client.Surname, client.Id);
-            }
-            catch
-            {
-                unitOfWork.Rollback();
-                throw;
+                try
+                {
+                    var client = new Client(ClientName, ClientSurname, PhoneNumber);
+
+                    clientRepository.RegisterClient(client);
+                    unitOfWork.Commit();
+                    
+                    Environment.Logger.Verbose("Registered client {0} {1} with Id {2}", client.Name, client.Surname, client.Id);
+                }
+                catch
+                {
+                    unitOfWork.Rollback();
+                    throw;
+                }  
             }
         }
+
+        
     }
 }
