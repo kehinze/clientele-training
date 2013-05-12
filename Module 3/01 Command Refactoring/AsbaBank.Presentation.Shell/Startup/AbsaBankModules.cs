@@ -1,4 +1,5 @@
 ﻿using AsbaBank.Infrastructure.Implementations.InMemory;
+using AsbaBank.Infrastructure.Implementations.Logger;
 using AsbaBank.Infrastructure.Interfaces;
 using AsbaBank.Infrastructure.Repositories;
 using Ninject.Modules;
@@ -11,6 +12,7 @@ namespace AsbaBank.Presentation.Shell.Startup
         {
             Kernel.Bind<IUnitOfWork>().ToMethod(c => Environment.GetUnitOfWork());
             Kernel.Bind<IClientRepository>().To<ClientRepository>();
+            Kernel.Bind<ILog>().To<ConsoleWindowLogger>();
         }
     }
 }

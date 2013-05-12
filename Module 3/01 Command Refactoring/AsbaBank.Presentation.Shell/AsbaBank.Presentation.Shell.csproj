@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandFactory.cs" />
+    <Compile Include="Commands\DebitAccount.cs" />
     <Compile Include="Commands\RegisterClient.cs" />
     <Compile Include="Commands\RegisterClientShell.cs" />
     <Compile Include="Environment.cs" />
