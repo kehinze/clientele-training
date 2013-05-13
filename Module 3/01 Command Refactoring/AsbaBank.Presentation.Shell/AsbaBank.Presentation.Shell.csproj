@@ -43,10 +43,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\RegisterClient.cs" />
-    <Compile Include="Commands\RegisterClientShell.cs" />
+    <Compile Include="Commands\RegisterClientBuilder.cs" />
     <Compile Include="Environment.cs" />
     <Compile Include="ICommand.cs" />
-    <Compile Include="IShellCommand.cs" />
+    <Compile Include="ICommandBuilder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -6,6 +6,7 @@ namespace AsbaBank.Presentation.Shell
     {
         string Usage { get; }
         string Key { get; }
-        ICommand Build(string[] args);
+        void Build(string[] args);
+        void Execute();
     }
 }

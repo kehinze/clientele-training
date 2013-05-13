@@ -1,5 +1,4 @@
 ﻿using System;
-
 using AsbaBank.Core;
 
 namespace AsbaBank.Domain.Commands

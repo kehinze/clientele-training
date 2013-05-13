@@ -51,8 +51,8 @@ namespace AsbaBank.Presentation.Shell
 
         private static void HandleRequest(string[] split)
         {
-            IShellCommand shellCommand = Environment.GetShellCommand(split.First());
-            ICommand command = shellCommand.Build(split.Skip(1).ToArray());
+            ICommandBuilder commandBuilder = Environment.GetShellCommand(split.First());
+            ICommand command = commandBuilder.Build(split.Skip(1).ToArray());
             
             command.Execute();
         }

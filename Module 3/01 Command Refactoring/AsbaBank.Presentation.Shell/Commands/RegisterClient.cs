@@ -34,7 +34,6 @@ namespace AsbaBank.Presentation.Shell.Commands
 
         public void Execute()
         {
-            //getting the unit of work like this is not ideal. Think of ways that we could solve this.
             var unitOfWork = Environment.GetUnitOfWork(); 
             var clientRepository = unitOfWork.GetRepository<Client>();
 

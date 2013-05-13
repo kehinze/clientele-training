@@ -47,5 +47,10 @@ namespace AsbaBank.Domain.Models
             PhoneNumber = phoneNumber;
             Address = Address.NullAddress();
         }
+
+        public void UpdateAddress(string streetNumber, string street, string postalCode, string city)
+        {
+            Address = new Address(streetNumber, street, postalCode, city);
+        }
     }
 }

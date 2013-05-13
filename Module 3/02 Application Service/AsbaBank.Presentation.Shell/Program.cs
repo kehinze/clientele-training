@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Threading;
 
-using AsbaBank.Core;
-
 namespace AsbaBank.Presentation.Shell
 {
     class Program
@@ -50,10 +48,8 @@ namespace AsbaBank.Presentation.Shell
         private static void HandleRequest(string[] split)
         {
             IShellCommand shellCommand = Environment.GetShellCommand(split.First());
-            ICommand command = shellCommand.Build(split.Skip(1).ToArray());
-
-            IPublishCommands commandPublisher = Environment.GetCommandPublisher();
-            commandPublisher.Publish(command);
+            shellCommand.Build(split.Skip(1).ToArray());
+            shellCommand.Execute();
         }
 
         private static void PrintHelp()

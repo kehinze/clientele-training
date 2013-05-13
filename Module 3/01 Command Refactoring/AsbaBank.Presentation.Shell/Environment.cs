@@ -4,18 +4,22 @@ using AsbaBank.Presentation.Shell.Commands;
 
 namespace AsbaBank.Presentation.Shell
 {
+    /// <remarks>
+    /// A central place for managing our dependencies. In a large and complex
+    /// application we may consider using an IoC framework.
+    /// </remarks>
     public static class Environment
     {
         private static readonly InMemoryDataStore DataStore;
         public static readonly ILog Logger;
-        private static readonly Dictionary<string, IShellCommand> ShellCommands; 
+        private static readonly Dictionary<string, ICommandBuilder> CommandBuilders; 
         
         static Environment()
         {
             DataStore = new InMemoryDataStore();
             Logger = new ConsoleWindowLogger();
-            ShellCommands = new Dictionary<string, IShellCommand>();
-            RegisterCommands();
+            CommandBuilders = new Dictionary<string, ICommandBuilder>();
+            RegisterCommandBuilders();
         }
 
         public static IUnitOfWork GetUnitOfWork()
@@ -23,24 +27,24 @@ namespace AsbaBank.Presentation.Shell
             return new InMemoryUnitOfWork(DataStore);
         }
 
-        public static IEnumerable<IShellCommand> GetShellCommands()
+        public static IEnumerable<ICommandBuilder> GetShellCommands()
         {
-            return ShellCommands.Values;
+            return CommandBuilders.Values;
         }
 
-        public static IShellCommand GetShellCommand(string key)
+        public static ICommandBuilder GetShellCommand(string key)
         {
-            return ShellCommands[key];
+            return CommandBuilders[key];
         }
 
-        private static void RegisterCommands()
+        private static void RegisterCommandBuilders()
         {
-            RegsiterCommand(new RegisterClientShell());   
+            RegisterCommandBuilder(new RegisterClientBuilder());   
         }
 
-        private static void RegsiterCommand(IShellCommand command)
+        private static void RegisterCommandBuilder(ICommandBuilder commandBuilder)
         {
-            ShellCommands.Add(command.Key, command);
+            CommandBuilders.Add(commandBuilder.Key, commandBuilder);
         }
 
     }

@@ -42,7 +42,6 @@
     <Compile Include="ICommand.cs" />
     <Compile Include="IHandleCommand.cs" />
     <Compile Include="ILog.cs" />
-    <Compile Include="IPublishCommands.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
