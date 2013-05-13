@@ -42,15 +42,15 @@ namespace AsbaBank.Presentation.Shell.Commands
             {
                 var unitOfWork = kernel.Get<IUnitOfWork>();
                 var clientRepository = kernel.Get<IClientRepository>();
-
+                var logger = kernel.Get<ILog>();
                 try
                 {
                     var client = new Client(ClientName, ClientSurname, PhoneNumber);
 
                     clientRepository.RegisterClient(client);
                     unitOfWork.Commit();
-                    
-                    Environment.Logger.Verbose("Registered client {0} {1} with Id {2}", client.Name, client.Surname, client.Id);
+
+                    logger.Verbose("Registered client {0} {1} with Id {2}", client.Name, client.Surname, client.Id);
                 }
                 catch
                 {

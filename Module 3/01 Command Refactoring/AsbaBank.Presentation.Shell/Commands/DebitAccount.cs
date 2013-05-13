@@ -11,7 +11,7 @@ using AsbaBank.Infrastructure.Repositories;
 
 namespace AsbaBank.Presentation.Shell.Commands
 {
-    public class DebitAccount : ICommand, IShellCommand 
+    public class DebitAccount : ICommand 
     {
         public decimal Amount { get; private set; }
         public string AccountNumber { get; private set; }
@@ -22,17 +22,7 @@ namespace AsbaBank.Presentation.Shell.Commands
             AccountNumber = accountNumber;
         }
 
-        public string Usage { get { return string.Format("{0} <AcccountId> <Amount>", Key); } }
-        public string Key { get { return "DebitAccount"; } }
-
-        public ICommand Build(string[] args)
-        {
-            if (args.Length != 2)
-            {
-                throw new ArgumentException(String.Format("Incorrect number of parameters. Usage is: {0}", Usage));
-            }
-            return new DebitAccount(args[0], args[1]);
-        }
+     
 
         public void Execute()
         {
@@ -55,7 +45,6 @@ namespace AsbaBank.Presentation.Shell.Commands
 
                     throw;
                 }
-               
             }
         }
 

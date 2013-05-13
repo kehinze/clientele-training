@@ -47,11 +47,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandFactory.cs" />
     <Compile Include="Commands\DebitAccount.cs" />
+    <Compile Include="Commands\DebitAccountShell.cs" />
+    <Compile Include="Commands\NullCommand.cs" />
+    <Compile Include="Commands\NullCommandShell.cs" />
     <Compile Include="Commands\RegisterClient.cs" />
     <Compile Include="Commands\RegisterClientShell.cs" />
-    <Compile Include="Environment.cs" />
+    <Compile Include="Factories\CommandFactory.cs" />
+    <Compile Include="Factories\DataStoreFactory.cs" />
+    <Compile Include="Factories\ICommandFactory.cs" />
+    <Compile Include="Handlers\CommandHandler.cs" />
+    <Compile Include="Handlers\ICommandHandler.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="IShellCommand.cs" />
     <Compile Include="Program.cs" />

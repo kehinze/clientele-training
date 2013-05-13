@@ -5,13 +5,25 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AsbaBank.Infrastructure;
+using AsbaBank.Infrastructure.Implementations.Logger;
+using AsbaBank.Presentation.Shell.Factories;
+using AsbaBank.Infrastructure.Interfaces;
+using AsbaBank.Presentation.Shell.Handlers;
 
 namespace AsbaBank.Presentation.Shell
 {
     class Program
     {
+        private static CommandFactory commandFactory;
+        private static ILog log;
+        private static ICommandHandler commandHandler;
+
         static void Main()
         {
+            commandFactory = new CommandFactory();
+            log = new ConsoleWindowLogger();
+            commandHandler = new CommandHandler(commandFactory, log);
+
             Console.WindowHeight = 40;
             Console.WindowWidth = 120;
 
@@ -31,32 +43,12 @@ namespace AsbaBank.Presentation.Shell
 
                 var split = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-                TryHandleRequest(split);
+                commandHandler.TryHandleRequest(split);
 
                 Console.WriteLine();
             }
         }
-
-        private static void TryHandleRequest(string[] split)
-        {
-            try
-            {
-                HandleRequest(split);
-            }
-            catch (Exception ex)
-            {
-                Environment.Logger.Fatal(ex.Message);
-            }
-        }
-
-        private static void HandleRequest(string[] split)
-        {
-            IShellCommand shellCommand = Environment.GetShellCommand(split.First());
-            ICommand command = shellCommand.Build(split.Skip(1).ToArray());
-            
-            command.Execute();
-        }
-
+        
         private static void PrintHelp()
         {
             ConsoleColor originalColor = Console.ForegroundColor;
@@ -64,7 +56,7 @@ namespace AsbaBank.Presentation.Shell
 
             Console.WriteLine("Available commands:");
 
-            foreach (var shellCommand in Environment.GetShellCommands())
+            foreach (var shellCommand in commandFactory.GetShellCommands())
             {
                 Console.WriteLine(shellCommand.Usage);
             }
