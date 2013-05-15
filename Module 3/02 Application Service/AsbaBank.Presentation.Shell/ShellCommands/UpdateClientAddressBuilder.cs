@@ -1,6 +1,6 @@
 ﻿using System;
+using AsbaBank.ApplicationService.Commands;
 using AsbaBank.Core.Commands;
-using AsbaBank.Domain.Commands;
 
 namespace AsbaBank.Presentation.Shell.ShellCommands
 {

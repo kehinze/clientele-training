@@ -1,17 +1,13 @@
-﻿using AsbaBank.Core;
+﻿using AsbaBank.ApplicationService.Commands;
+using AsbaBank.Core;
 using AsbaBank.Core.Commands;
-using AsbaBank.Domain.Commands;
 using AsbaBank.Domain.Models;
 
 namespace AsbaBank.ApplicationService
 {
-    public interface IClientService : 
+    public class ClientService : 
         IHandleCommand<RegisterClient>,
         IHandleCommand<UpdateClientAddress>
-    {
-    }
-
-    public class ClientService : IClientService
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly ILog logger;

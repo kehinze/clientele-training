@@ -1,6 +1,6 @@
-﻿using AsbaBank.Core;
+﻿using AsbaBank.ApplicationService.Commands;
+using AsbaBank.Core;
 using AsbaBank.Core.Commands;
-using AsbaBank.Domain.Commands;
 using AsbaBank.Domain.Models;
 
 namespace AsbaBank.ApplicationService

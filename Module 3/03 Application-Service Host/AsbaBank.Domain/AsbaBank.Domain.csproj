@@ -46,8 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\RegisterClient.cs" />
-    <Compile Include="Commands\UpdateClientAddress.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\BankCard.cs" />

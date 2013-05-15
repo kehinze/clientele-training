@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using AsbaBank.Core.Commands;
 
-namespace AsbaBank.Domain.Commands
+namespace AsbaBank.ApplicationService.Commands
 {
     [DataContract]
     public class UpdateClientAddress : ICommand
