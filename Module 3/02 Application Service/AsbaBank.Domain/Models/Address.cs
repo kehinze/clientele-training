@@ -20,7 +20,7 @@ namespace AsbaBank.Domain.Models
             //here for the deserializer
         }
 
-        public Address(string streetNumber, string street, string city, string postalCode )
+        public Address(string streetNumber, string street, string city, string postalCode)
         {
             ValidateInput("street number", streetNumber);
             ValidateInput("street", street);

@@ -1,12 +1,18 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using AsbaBank.Core;
+using AsbaBank.Core.Commands;
 
 namespace AsbaBank.Domain.Commands
-{  
+{
+    [DataContract]
     public class RegisterClient : ICommand
     {
+        [DataMember]
         public string ClientName { get; private set; }
+        [DataMember]
         public string ClientSurname { get; private set; }
+        [DataMember]
         public string PhoneNumber { get; private set; }
 
         public RegisterClient(string clientName, string clientSurname, string phoneNumber)

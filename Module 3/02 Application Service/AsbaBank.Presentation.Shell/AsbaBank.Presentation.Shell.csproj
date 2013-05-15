@@ -42,12 +42,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ShellCommands\RegisterClientShellCommand.cs" />
+    <Compile Include="ISystemCommand.cs" />
+    <Compile Include="ShellCommands\RegisterClientBuilder.cs" />
     <Compile Include="Environment.cs" />
-    <Compile Include="IShellCommand.cs" />
+    <Compile Include="ICommandBuilder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ShellCommands\UpdateClientAddressShellCommand.cs" />
+    <Compile Include="ShellCommands\UpdateClientAddressBuilder.cs" />
+    <Compile Include="SystemCommands\ListScripts.cs" />
+    <Compile Include="SystemCommands\RecordScript.cs" />
+    <Compile Include="SystemCommands\RunScript.cs" />
+    <Compile Include="SystemCommands\SaveScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

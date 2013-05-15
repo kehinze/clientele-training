@@ -11,7 +11,6 @@ using System.Runtime.Serialization;
 using System.Text;
 
 using AsbaBank.Core;
-
 using Newtonsoft.Json;
 
 /* ===========================================================================================
@@ -235,7 +234,7 @@ namespace AsbaBank.Infrastructure
     }
 
     [DebuggerNonUserCode, DebuggerStepThrough]
-    class JsonSerializer 
+    public class JsonSerializer 
     {
         private readonly Newtonsoft.Json.JsonSerializer serializer;
         private readonly Encoding encoding = Encoding.UTF8;

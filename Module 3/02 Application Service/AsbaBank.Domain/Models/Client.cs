@@ -9,14 +9,19 @@ namespace AsbaBank.Domain.Models
     [DataContract]
     public class Client
     {
-        [Key, DataMember]
+        [Key]
+        [DataMember]
         public int Id { get; protected set; }
+
         [DataMember]
         public string Name { get; protected set; }
+
         [DataMember]
         public string Surname { get; protected set; }
+
         [DataMember]
         public string PhoneNumber { get; protected set; }
+
         [DataMember]
         public Address Address { get; protected set; }
 

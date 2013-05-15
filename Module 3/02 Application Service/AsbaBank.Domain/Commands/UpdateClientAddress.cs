@@ -1,14 +1,21 @@
 ﻿using System;
-using AsbaBank.Core;
+using System.Runtime.Serialization;
+using AsbaBank.Core.Commands;
 
 namespace AsbaBank.Domain.Commands
 {
+    [DataContract]
     public class UpdateClientAddress : ICommand
     {
+        [DataMember]
         public int ClientId { get; private set; }
+        [DataMember]
         public string StreetNumber { get; private set; }
+        [DataMember]
         public string Street { get; private set; }
+        [DataMember]
         public string PostalCode { get; private set; }
+        [DataMember]
         public string City { get; private set; }
 
         public UpdateClientAddress(int clientId, string streetNumber, string street, string city, string postalCode)
