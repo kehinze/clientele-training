@@ -38,7 +38,14 @@ namespace AsbaBank.Presentation.Shell.Commands
         
         public void Execute()
         {
+<<<<<<< HEAD
             using (var kernel = new StandardKernel(new AbsaBankModules()))
+=======
+            var unitOfWork = Environment.GetUnitOfWork(); 
+            var clientRepository = unitOfWork.GetRepository<Client>();
+
+            try
+>>>>>>> upstream/master
             {
                 var unitOfWork = kernel.Get<IUnitOfWork>();
                 var clientRepository = kernel.Get<IClientRepository>();

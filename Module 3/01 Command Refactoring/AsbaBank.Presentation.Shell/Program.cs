@@ -48,7 +48,31 @@ namespace AsbaBank.Presentation.Shell
                 Console.WriteLine();
             }
         }
+<<<<<<< HEAD
         
+=======
+
+        private static void TryHandleRequest(string[] split)
+        {
+            try
+            {
+                HandleRequest(split);
+            }
+            catch (Exception ex)
+            {
+                Environment.Logger.Fatal(ex.Message);
+            }
+        }
+
+        private static void HandleRequest(string[] split)
+        {
+            ICommandBuilder commandBuilder = Environment.GetShellCommand(split.First());
+            ICommand command = commandBuilder.Build(split.Skip(1).ToArray());
+            
+            command.Execute();
+        }
+
+>>>>>>> upstream/master
         private static void PrintHelp()
         {
             ConsoleColor originalColor = Console.ForegroundColor;
