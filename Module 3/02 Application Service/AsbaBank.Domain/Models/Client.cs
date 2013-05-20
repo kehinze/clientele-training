@@ -53,6 +53,17 @@ namespace AsbaBank.Domain.Models
             Address = Address.NullAddress();
         }
 
+        public void UpdateNameAndSurname(string name, string surname)
+        {
+            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(surname))
+            {
+                throw new ArgumentException("Please provide a valid name and surname.");
+            }
+
+            Name = name;
+            Surname = surname;
+        }
+
         public void UpdateAddress(string streetNumber, string street, string postalCode, string city)
         {
             Address = new Address(streetNumber, street, postalCode, city);

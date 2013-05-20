@@ -5,6 +5,8 @@ using System.Threading;
 using AsbaBank.Core;
 using AsbaBank.Core.Commands;
 using AsbaBank.Infrastructure.CommandScripts;
+using AsbaBank.Infrastructure.EntityFramework;
+using System.Data.Entity;
 
 namespace AsbaBank.Presentation.Shell
 {
@@ -14,6 +16,12 @@ namespace AsbaBank.Presentation.Shell
 
         static void Main()
         {
+            DbContext dbContext = new AbsaContext("AbsaBank", OnContextCreationEnum.CreateIfDoesntExist);
+
+            IUnitOfWork unitOfWork = new UnitOfWork(dbContext);
+
+            
+
 
             Console.WindowHeight = 40;
             Console.WindowWidth = 120;
@@ -66,7 +74,7 @@ namespace AsbaBank.Presentation.Shell
 
                 Recorder.AddCommand(command);
 
-                IPublishCommands commandPublisher = Environment.GetCommandPublisher();
+                IPublishCommands commandPublisher = Environment.GetCommandPublisher(true);
                 commandPublisher.Publish(command);
             }
         }

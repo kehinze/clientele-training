@@ -3,8 +3,10 @@ using AsbaBank.ApplicationService;
 using AsbaBank.Core;
 using AsbaBank.Infrastructure;
 using AsbaBank.Infrastructure.CommandScripts;
+using AsbaBank.Infrastructure.EntityFramework;
 using AsbaBank.Presentation.Shell.ShellCommands;
 using AsbaBank.Presentation.Shell.SystemCommands;
+using System.Data.Entity;
 
 namespace AsbaBank.Presentation.Shell
 {
@@ -59,6 +61,7 @@ namespace AsbaBank.Presentation.Shell
         {
             RegisterCommandBuilder(new RegisterClientBuilder());
             RegisterCommandBuilder(new UpdateClientAddressBuilder());
+            RegisterCommandBuilder(new UpdateClientNameAndSurnameBuilder());
         }
 
         private static void RegisterCommandBuilder(ICommandBuilder commandBuilder)
@@ -66,10 +69,21 @@ namespace AsbaBank.Presentation.Shell
             CommandBuilders.Add(commandBuilder.Key.ToUpper(), commandBuilder);
         }
 
-        public static IPublishCommands GetCommandPublisher()
+        public static IPublishCommands GetCommandPublisher(bool useDatabase)
         {
             var commandPublisher = new LocalCommandPublisher();
-            var unitOfWork = new InMemoryUnitOfWork(DataStore);
+
+            IUnitOfWork unitOfWork;
+
+            if (useDatabase)
+            {
+                DbContext dbContext = new AbsaContext("AbsaBank_Dev", OnContextCreationEnum.CreateIfDoesntExist);
+                unitOfWork = new UnitOfWork(dbContext);
+            }
+            else
+            {
+                unitOfWork = new InMemoryUnitOfWork(DataStore);
+            }
 
             commandPublisher.Subscribe(new ClientService(unitOfWork, Logger));
 
@@ -78,7 +92,7 @@ namespace AsbaBank.Presentation.Shell
 
         public static ScriptPlayer GetScriptPlayer()
         {
-            return new ScriptPlayer(GetCommandPublisher());
+            return new ScriptPlayer(GetCommandPublisher(true));
         }
 
         public static ScriptRecorder GetScriptRecorder()

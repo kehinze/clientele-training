@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
 namespace AsbaBank.Domain.Models
@@ -6,6 +7,10 @@ namespace AsbaBank.Domain.Models
     [DataContract]
     public class Address
     {
+        [Key]
+        [DataMember]
+        public int Id { get; protected set; }
+
         [DataMember]
         public string StreetNumber { get; protected set; }
         [DataMember]

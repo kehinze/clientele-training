@@ -7,7 +7,7 @@ namespace AsbaBank.ApplicationService
 {
     public class ClientService : 
         IHandleCommand<RegisterClient>,
-        IHandleCommand<UpdateClientAddress>
+        IHandleCommand<UpdateClientAddress>, IHandleCommand<UpdateClientNameAndSurname>
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly ILog logger;
@@ -48,6 +48,24 @@ namespace AsbaBank.ApplicationService
                 unitOfWork.Commit();
 
                 logger.Verbose("Updated client address.");
+            }
+            catch
+            {
+                unitOfWork.Rollback();
+                throw;
+            }
+        }
+
+        public void Execute(UpdateClientNameAndSurname command)
+        {
+            IRepository<Client> clientRepository = unitOfWork.GetRepository<Client>();
+            Client client = clientRepository.Get(command.ClientId);
+            try
+            {
+                client.UpdateNameAndSurname(command.Name, command.Surname);
+                unitOfWork.Commit();
+
+                logger.Verbose("Updated client name and surname.");
             }
             catch
             {
