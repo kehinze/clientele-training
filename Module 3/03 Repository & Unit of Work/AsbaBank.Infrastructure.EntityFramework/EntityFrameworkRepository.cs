@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
@@ -10,21 +12,15 @@ namespace AsbaBank.Infrastructure.EntityFramework
     {
         private readonly IDbSet<TEntity> dbSet;
 
+        public Expression Expression { get { return dbSet.Expression; } }
+        public Type ElementType { get { return dbSet.ElementType; } }
+        public IQueryProvider Provider { get { return dbSet.Provider; } }
+
         internal EntityFrameworkRepository(IDbSet<TEntity> dbSet)
         {
             this.dbSet = dbSet;
         }
        
-        public IQueryable<TEntity> FindAll()
-        {
-            return dbSet;
-        }
-
-        public IQueryable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
-        {
-            return dbSet.Where(predicate);
-        }
-
         public TEntity Get(int id)
         {
             return dbSet.Find(id);
@@ -39,5 +35,15 @@ namespace AsbaBank.Infrastructure.EntityFramework
         {
             dbSet.Remove(entity);
         }
+
+        public IEnumerator<TEntity> GetEnumerator()
+        {
+            return dbSet.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }      
     }
 }

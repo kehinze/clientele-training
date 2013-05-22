@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
@@ -6,11 +8,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using AsbaBank.Core;
 
-/* ===========================================================================================
- * NB! This infratstructure code is meant to simulate various infrastructure concerns.
- * Attempting to understanding this is not recommended or required in order to understand the 
- * general principles being demonstrated.
- * =========================================================================================== */
 namespace AsbaBank.Infrastructure.InMemory
 {
     [DebuggerNonUserCode, DebuggerStepThrough]
@@ -19,8 +16,9 @@ namespace AsbaBank.Infrastructure.InMemory
         private readonly InMemoryDataStore dataStore;
         private readonly PropertyInfo identityPropertyInfo;
 
-        public int Count { get { return dataStore.Count<TEntity>(); } }
-        public bool IsReadOnly { get { return false; } }
+        public Expression Expression { get { return dataStore.GetData<TEntity>().Expression; } }
+        public Type ElementType { get { return dataStore.GetData<TEntity>().ElementType; } }
+        public IQueryProvider Provider { get { return dataStore.GetData<TEntity>().Provider; } }
 
         public InMemoryRepository(InMemoryDataStore dataStore)
         {
@@ -28,7 +26,7 @@ namespace AsbaBank.Infrastructure.InMemory
             identityPropertyInfo = GetIdentityPropertyInformation();
         }
 
-        private PropertyInfo GetIdentityPropertyInformation() 
+        private PropertyInfo GetIdentityPropertyInformation()
         {
             return typeof(TEntity)
                 .GetProperties()
@@ -39,7 +37,6 @@ namespace AsbaBank.Infrastructure.InMemory
         {
             return dataStore
                 .AsQueryable<TEntity>()
-                .AsQueryable()
                 .SingleOrDefault(WithMatchingId(id));
         }
 
@@ -50,21 +47,14 @@ namespace AsbaBank.Infrastructure.InMemory
             Expression target = Expression.Constant(id);
             Expression equalsMethod = Expression.Equal(property, target);
             Func<TEntity, bool> predicate = Expression.Lambda<Func<TEntity, bool>>(equalsMethod, parameter).Compile();
-            
+
             return predicate;
         }
 
-        public IQueryable<TEntity> FindAll()
+        public IQueryable<TEntity> AsQueryable()
         {
             return dataStore.AsQueryable<TEntity>();
         }
-
-        public IQueryable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
-        {
-            return dataStore
-                .AsQueryable<TEntity>()
-                .Where(predicate);
-        }       
 
         public void Add(TEntity item)
         {
@@ -80,11 +70,21 @@ namespace AsbaBank.Infrastructure.InMemory
             }
 
             dataStore.Add(item);
-        }      
-  
+        }
+
         public void Remove(TEntity item)
         {
             dataStore.Remove(item);
         }
+
+        public IEnumerator<TEntity> GetEnumerator()
+        {
+            return dataStore.GetData<TEntity>().GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }       
     }
 }

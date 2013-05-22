@@ -1,4 +1,5 @@
-﻿using AsbaBank.ApplicationService.Commands;
+﻿using System.Linq;
+using AsbaBank.ApplicationService.Commands;
 using AsbaBank.Core;
 using AsbaBank.Core.Commands;
 using AsbaBank.Domain.Models;
