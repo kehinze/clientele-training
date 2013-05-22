@@ -16,13 +16,6 @@ namespace AsbaBank.Presentation.Shell
 
         static void Main()
         {
-            DbContext dbContext = new AbsaContext("AbsaBank", OnContextCreationEnum.CreateIfDoesntExist);
-
-            IUnitOfWork unitOfWork = new UnitOfWork(dbContext);
-
-            
-
-
             Console.WindowHeight = 40;
             Console.WindowWidth = 120;
 
