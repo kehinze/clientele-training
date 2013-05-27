@@ -13,7 +13,7 @@ namespace AsbaBank.Infrastructure
                 CultureInfo.InvariantCulture,
                 MessageFormat,
                 DateTime.UtcNow,
-                typeToLog.FullName,
+                typeToLog.Name,
                 string.Format(CultureInfo.InvariantCulture, message, values));
         }
     }

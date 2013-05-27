@@ -22,19 +22,25 @@ namespace AsbaBank.Infrastructure.CommandPublishers
         {
             Logger.Verbose("Authorizing command", command.GetType());
 
-            var attributes = Attribute.GetCustomAttributes(command.GetType());
-
-            var authorizeAttribute = attributes.FirstOrDefault(a => a is CommandAuthorizeAttribute) as CommandAuthorizeAttribute;
-
-            if (authorizeAttribute != null && authorizeAttribute.Role != currentUser.Role.ToString())
-            {
-                Logger.Error("User {0} with role {1} attempted to execute command {2} which requires role {3}", 
-                    currentUser.UserName, currentUser.Role, command.GetType().Name, authorizeAttribute.Role);
-
-                throw new Exception("You are not authorized to execute this command.");
-            }
+            Authorize(command);
 
             publisher.Publish(command);
+        }
+
+        private void Authorize(ICommand command)
+        {
+            var authorizeAttribute = Attribute.GetCustomAttributes(command.GetType())
+                .FirstOrDefault(a => a is CommandAuthorizeAttribute) as CommandAuthorizeAttribute;
+
+            if (authorizeAttribute == null || authorizeAttribute.Role == currentUser.Role)
+            {
+                return;
+            }
+
+            Logger.Error("User {0} with role {1} attempted to execute command {2} which requires role {3}",
+                         currentUser.UserName, currentUser.Role, command.GetType().Name, authorizeAttribute.Role);
+
+            throw new Exception("You are not authorized to execute this command.");
         }
 
         public override void Subscribe(object handler)

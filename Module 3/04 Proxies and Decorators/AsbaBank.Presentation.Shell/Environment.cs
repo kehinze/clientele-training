@@ -27,7 +27,7 @@ namespace AsbaBank.Presentation.Shell
             RegsiterSystemCommands();
             RegsiterCommandBuilders();
 
-            Database.SetInitializer(new AsbaContextInitializer());
+            
             ContextFactory = new ContextFactory<AsbaContext>("AsbaBank");
         }
 

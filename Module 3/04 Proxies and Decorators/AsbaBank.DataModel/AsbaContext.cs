@@ -13,11 +13,13 @@ namespace AsbaBank.DataModel
 
         public AsbaContext()
         {
+            Database.SetInitializer(new AsbaContextInitializer());
         }
 
         public AsbaContext(string connectionStringName)
             : base(connectionStringName)
         {
+            Database.SetInitializer(new AsbaContextInitializer());
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
