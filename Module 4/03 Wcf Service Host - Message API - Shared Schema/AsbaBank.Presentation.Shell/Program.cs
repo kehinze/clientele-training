@@ -14,6 +14,9 @@ namespace AsbaBank.Presentation.Shell
         static void Main()
         {
 
+            var blah = new QueryExampleController(Environment.GetQueryProcessor());
+            blah.ShowAllClients();
+
             Console.WindowHeight = 40;
             Console.WindowWidth = 120;
 
@@ -45,8 +48,7 @@ namespace AsbaBank.Presentation.Shell
             {
                 HandleRequest(split);
 
-                var blah = new QueryExampleController(Environment.GetQueryProcessor());
-                blah.ShowAllClients();
+                
             }
             catch (Exception ex)
             {

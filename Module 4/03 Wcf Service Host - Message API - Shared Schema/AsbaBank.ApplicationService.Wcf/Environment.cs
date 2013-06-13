@@ -12,6 +12,7 @@ namespace AsbaBank.ApplicationService.Wcf
     static class Environment
     {
         public static readonly ILog Logger;
+
         private static readonly IContextFactory ContextFactory;
 
         static Environment()

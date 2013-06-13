@@ -21,7 +21,7 @@ namespace AsbaBank.ApplicationService.Wcf
 
         public static IEnumerable<Type> GetKnownTypes(ICustomAttributeProvider provider)
         {
-            var contractAssembly = Assembly.Load(new AssemblyName("AsbaBank.Contracts"));
+            var contractAssembly = Assembly.Load(new AssemblyName("AsbaBank.ApplicationService"));
 
             var queryTypes = (
                from type in contractAssembly.GetExportedTypes()

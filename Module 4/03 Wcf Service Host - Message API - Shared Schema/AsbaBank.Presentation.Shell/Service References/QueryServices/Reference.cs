@@ -15,7 +15,7 @@ namespace AsbaBank.Presentation.Shell.QueryServices {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="ClientDto", Namespace="http://schemas.datacontract.org/2004/07/AsbaBank.Contracts.Dtos")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ClientDto", Namespace="http://schemas.datacontract.org/2004/07/AsbaBank.ApplicationService.Dtos")]
     [System.SerializableAttribute()]
     public partial class ClientDto : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         

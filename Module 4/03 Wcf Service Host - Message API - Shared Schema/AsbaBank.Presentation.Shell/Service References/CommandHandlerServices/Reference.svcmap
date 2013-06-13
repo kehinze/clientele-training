@@ -23,10 +23,11 @@
   </MetadataSources>
   <Metadata>
     <MetadataFile FileName="CommandHandlerService.disco" MetadataType="Disco" ID="2107ef96-1152-492e-9431-a3b6631b9360" SourceId="1" SourceUrl="http://localhost:49525/CommandHandlerService.svc?disco" />
-    <MetadataFile FileName="CommandHandlerService.wsdl" MetadataType="Wsdl" ID="c68f236c-0ca1-49b3-a14c-ef4d27cc33a5" SourceId="1" SourceUrl="http://localhost:49525/CommandHandlerService.svc?wsdl=wsdl0" />
     <MetadataFile FileName="CommandHandlerService.xsd" MetadataType="Schema" ID="441114a8-3f6a-4a85-952c-da0749e0ae85" SourceId="1" SourceUrl="http://localhost:49525/CommandHandlerService.svc?xsd=xsd0" />
     <MetadataFile FileName="CommandHandlerService1.xsd" MetadataType="Schema" ID="962fd599-1971-4668-b7b4-f21328e4e7b5" SourceId="1" SourceUrl="http://localhost:49525/CommandHandlerService.svc?xsd=xsd1" />
+    <MetadataFile FileName="CommandHandlerService2.xsd" MetadataType="Schema" ID="7dbec89e-e155-44b5-844d-3279383141e1" SourceId="1" SourceUrl="http://localhost:49525/CommandHandlerService.svc?xsd=xsd2" />
     <MetadataFile FileName="CommandHandlerService1.wsdl" MetadataType="Wsdl" ID="c1489d1e-13b4-4d54-8a4d-102c956a2c47" SourceId="1" SourceUrl="http://localhost:49525/CommandHandlerService.svc?wsdl" />
+    <MetadataFile FileName="CommandHandlerService.wsdl" MetadataType="Wsdl" ID="c68f236c-0ca1-49b3-a14c-ef4d27cc33a5" SourceId="1" SourceUrl="http://localhost:49525/CommandHandlerService.svc?wsdl=wsdl0" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

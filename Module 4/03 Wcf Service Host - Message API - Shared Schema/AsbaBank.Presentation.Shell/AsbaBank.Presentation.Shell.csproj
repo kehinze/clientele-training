@@ -84,6 +84,9 @@
     <None Include="Service References\CommandHandlerServices\CommandHandlerService1.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\CommandHandlerServices\CommandHandlerService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\QueryServices\QueryService.wsdl" />
     <None Include="Service References\QueryServices\QueryService.xsd">
       <SubType>Designer</SubType>
