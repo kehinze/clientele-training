@@ -48,6 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleViews\AllClientsView.cs" />
+    <Compile Include="ConsoleView.cs" />
+    <Compile Include="ConsoleViews\ClientsWithNameView.cs" />
+    <Compile Include="IConsoleView.cs" />
     <Compile Include="ISystemCommand.cs" />
     <Compile Include="ShellCommands\RegisterClientBuilder.cs" />
     <Compile Include="Environment.cs" />
@@ -88,6 +92,10 @@
     <ProjectReference Include="..\AsbaBank.Infrastructure\AsbaBank.Infrastructure.csproj">
       <Project>{88336594-86D7-438D-983F-7828F2765E41}</Project>
       <Name>AsbaBank.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AsbaBank.Queries\AsbaBank.Queries.csproj">
+      <Project>{03307894-7C79-41BA-AAE1-425FCA87519E}</Project>
+      <Name>AsbaBank.Queries</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -48,8 +48,8 @@
   <ItemGroup>
     <Compile Include="EntityFrameworkQuery.cs" />
     <Compile Include="ContextFactory.cs" />
-    <Compile Include="Repository.cs" />
-    <Compile Include="UnitOfWork.cs" />
+    <Compile Include="EntityFrameworkRepository.cs" />
+    <Compile Include="EntityFrameworkUnitOfWork.cs" />
     <Compile Include="IContextFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

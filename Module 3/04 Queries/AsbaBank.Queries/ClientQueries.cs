@@ -1,18 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using AsbaBank.Core.Persistence;
 using AsbaBank.Domain.Models;
 
-namespace AsbaBank.DataModel
-{   
-    public class ClientDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Surname { get; set; }
-        public string PhoneNumber { get; set; }
-    }
-
+namespace AsbaBank.Queries
+{ 
     public class ClientQueries
     {
         private readonly IEntityQuery entityQuery;
@@ -24,33 +18,42 @@ namespace AsbaBank.DataModel
             this.sqlQuery = sqlQuery;
         }
 
-        public ICollection<Client> All()
+        private Expression<Func<Client, ClientDto>> ClientToDtoMapping
         {
-            var query = entityQuery.Query<Client>();
+            get
+            {
+                return c => new ClientDto
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Surname = c.Surname,
+                    PhoneNumber = c.PhoneNumber
+                };
+            }
+        }
 
-            return query.ToList();
-        }        
-
-        public ICollection<Client> WithPhoneNumberLike(string phoneNumber)
+        public ICollection<ClientDto> All()
         {
-            var query = entityQuery.Query<Client>()
-                                   .Where(c => c.PhoneNumber.Contains(phoneNumber));
-           
-            return query.ToList();
+            return entityQuery
+                .Query<Client>()
+                .Select(ClientToDtoMapping)
+                .ToList();
+        }
+
+        public ICollection<ClientDto> WithPhoneNumberLike(string phoneNumber)
+        {
+            return entityQuery.Query<Client>()
+                              .Where(c => c.PhoneNumber.Contains(phoneNumber))
+                              .Select(ClientToDtoMapping)
+                              .ToList();
         }
 
         public ICollection<ClientDto> WithSurname(string surname)
         {
-            var query = entityQuery.Query<Client>()
-                                   .Where(c => c.Surname.Equals(surname))
-                                   .Select(c => new ClientDto
-                                   {
-                                       Name = c.Name,
-                                       Surname = c.Surname,
-                                       PhoneNumber = c.PhoneNumber
-                                   });
-
-            return query.ToList();
+            return entityQuery.Query<Client>()
+                              .Where(c => c.Surname.Equals(surname))
+                              .Select(ClientToDtoMapping)
+                              .ToList();
         }
 
         public ICollection<ClientDto> WithName(string name)

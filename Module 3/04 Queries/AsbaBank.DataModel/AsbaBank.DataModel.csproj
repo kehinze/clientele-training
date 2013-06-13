@@ -48,7 +48,6 @@
   <ItemGroup>
     <Compile Include="AsbaContext.cs" />
     <Compile Include="AsbaContextInitializer.cs" />
-    <Compile Include="ClientQueries.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

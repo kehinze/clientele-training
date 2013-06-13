@@ -8,7 +8,7 @@ using AsbaBank.Core.Persistence;
 
 namespace AsbaBank.Infrastructure.EntityFramework
 {
-    public class Repository<TEntity> : IRepository<TEntity>  where TEntity : class
+    public class EntityFrameworkRepository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         private readonly IDbSet<TEntity> dbSet;
 
@@ -16,7 +16,7 @@ namespace AsbaBank.Infrastructure.EntityFramework
         public Type ElementType { get { return dbSet.ElementType; } }
         public IQueryProvider Provider { get { return dbSet.Provider; } }
 
-        internal Repository(IDbSet<TEntity> dbSet)
+        internal EntityFrameworkRepository(IDbSet<TEntity> dbSet)
         {
             this.dbSet = dbSet;
         }
@@ -38,12 +38,12 @@ namespace AsbaBank.Infrastructure.EntityFramework
 
         public IEnumerator<TEntity> GetEnumerator()
         {
-            return dbSet.GetEnumerator();
+            return ((IEnumerable<TEntity>)Provider.Execute(Expression)).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
-        }      
+            return ((IEnumerable)Provider.Execute(Expression)).GetEnumerator();
+        }
     }
 }

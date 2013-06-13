@@ -7,8 +7,10 @@ using AsbaBank.Infrastructure;
 using AsbaBank.Infrastructure.CommandPublishers;
 using AsbaBank.Infrastructure.CommandScripts;
 using AsbaBank.Infrastructure.EntityFramework;
+using AsbaBank.Presentation.Shell.ConsoleViews;
 using AsbaBank.Presentation.Shell.ShellCommands;
 using AsbaBank.Presentation.Shell.SystemCommands;
+using AsbaBank.Queries;
 
 namespace AsbaBank.Presentation.Shell
 {
@@ -16,6 +18,7 @@ namespace AsbaBank.Presentation.Shell
     {
         private static readonly Dictionary<string, ICommandBuilder> CommandBuilders;
         private static readonly Dictionary<string, ISystemCommand> SystemCommands;
+        private static readonly Dictionary<string, IConsoleView> ConsoleViews; 
         private static readonly ScriptRecorder ScriptRecorder;
         private static readonly IContextFactory ContextFactory;
 
@@ -23,11 +26,12 @@ namespace AsbaBank.Presentation.Shell
         {
             CommandBuilders = new Dictionary<string, ICommandBuilder>();
             SystemCommands = new Dictionary<string, ISystemCommand>();
+            ConsoleViews = new Dictionary<string, IConsoleView>();
             ScriptRecorder = new ScriptRecorder();
             RegsiterSystemCommands();
             RegsiterCommandBuilders();
+            RegisterViews();
 
-            
             ContextFactory = new ContextFactory<AsbaContext>("AsbaBank");
         }
 
@@ -44,6 +48,17 @@ namespace AsbaBank.Presentation.Shell
         public static ICommandBuilder GetShellCommand(string command)
         {
             return CommandBuilders[command.ToUpper()];
+        }
+
+        private static void RegisterViews()
+        {
+            RegisterView(new AllClientsView(GetClientQueries()));
+            RegisterView(new ClientsWithNameView(GetClientQueries()));
+        }
+
+        private static void RegisterView(IConsoleView view)
+        {
+            ConsoleViews.Add(view.Key.ToUpper(), view);
         }
 
         private static void RegsiterSystemCommands()
@@ -106,6 +121,32 @@ namespace AsbaBank.Presentation.Shell
         public static ISystemCommand GetSystemCommand(string command)
         {
             return SystemCommands[command.ToUpper()];
+        }
+
+        public static ClientQueries GetClientQueries()
+        {
+            var efQuery = GetEntityFrameworkQuery();
+            return new ClientQueries(efQuery, efQuery);
+        }
+
+        private static EntityFrameworkQuery GetEntityFrameworkQuery()
+        {
+            return new EntityFrameworkQuery(new ContextFactory<AsbaContext>("AsbaBank"));
+        }
+
+        public static IEnumerable<IConsoleView> GetViews()
+        {
+            return ConsoleViews.Values;
+        }
+
+        public static bool IsView(string command)
+        {
+            return ConsoleViews.ContainsKey(command.ToUpper());
+        }
+
+        public static IConsoleView GetView(string request)
+        {
+            return ConsoleViews[request.ToUpper()];
         }
     }
 }

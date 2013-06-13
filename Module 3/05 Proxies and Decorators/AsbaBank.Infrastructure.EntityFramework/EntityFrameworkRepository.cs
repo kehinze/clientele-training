@@ -38,12 +38,12 @@ namespace AsbaBank.Infrastructure.EntityFramework
 
         public IEnumerator<TEntity> GetEnumerator()
         {
-            return dbSet.GetEnumerator();
+            return ((IEnumerable<TEntity>)Provider.Execute(Expression)).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
-        }      
+            return ((IEnumerable)Provider.Execute(Expression)).GetEnumerator();
+        }     
     }
 }

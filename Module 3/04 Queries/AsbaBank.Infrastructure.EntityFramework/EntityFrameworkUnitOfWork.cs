@@ -4,13 +4,13 @@ using AsbaBank.Core.Persistence;
 
 namespace AsbaBank.Infrastructure.EntityFramework
 {
-    public class UnitOfWork : IUnitOfWork, IDisposable
+    public class EntityFrameworkUnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly IContextFactory contextFactory;
         private DbContext context;
         private bool isDisposed;
 
-        public UnitOfWork(IContextFactory contextFactory)
+        public EntityFrameworkUnitOfWork(IContextFactory contextFactory)
         {
             this.contextFactory = contextFactory;
             context = contextFactory.GetContext();
@@ -27,9 +27,9 @@ namespace AsbaBank.Infrastructure.EntityFramework
             context = contextFactory.GetContext();
         }
 
-        public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
+        public IRepository<TEntity> CreateRepository<TEntity>() where TEntity : class
         {
-            return new Repository<TEntity>(context.Set<TEntity>());
+            return new EntityFrameworkRepository<TEntity>(context.Set<TEntity>());
         }
 
         public void Dispose()

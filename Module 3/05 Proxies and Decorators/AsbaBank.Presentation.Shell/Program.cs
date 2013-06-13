@@ -13,6 +13,7 @@ namespace AsbaBank.Presentation.Shell
     class Program
     {
         static readonly ScriptRecorder Recorder = new ScriptRecorder();
+        static readonly ConsoleColor DefaultColor = Console.ForegroundColor;
         private static ILog logger;
 
         static void Main()
@@ -27,6 +28,7 @@ namespace AsbaBank.Presentation.Shell
 
             while (true)
             {
+                Console.ForegroundColor = DefaultColor;
                 Thread.Sleep(300);
                 Console.Write("> ");
 
@@ -59,15 +61,23 @@ namespace AsbaBank.Presentation.Shell
 
         private static void HandleRequest(string[] split)
         {
-            if (Environment.IsSystemCommand(split.First()))
+            var request = split.First();
+            var parameters = split.Skip(1).ToArray();
+
+            if (Environment.IsSystemCommand(request))
             {
-                var command = Environment.GetSystemCommand(split.First());
-                command.Execute(split.Skip(1).ToArray());
+                var command = Environment.GetSystemCommand(request);
+                command.Execute(parameters);
+            }
+            else if (Environment.IsView(request))
+            {
+                var view = Environment.GetView(request);
+                view.Print(parameters);
             }
             else
             {
-                ICommandBuilder commandBuilder = Environment.GetShellCommand(split.First());
-                ICommand command = commandBuilder.Build(split.Skip(1).ToArray());
+                ICommandBuilder commandBuilder = Environment.GetShellCommand(request);
+                ICommand command = commandBuilder.Build(parameters);
 
                 Recorder.AddCommand(command);
 
@@ -78,14 +88,13 @@ namespace AsbaBank.Presentation.Shell
 
         private static void PrintHelp()
         {
-            ConsoleColor originalColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Green;
-           
+
             Console.WriteLine("Available commands:");
 
             foreach (var shellCommand in Environment.GetShellCommands())
             {
-                Console.WriteLine(shellCommand.Usage);
+                Console.WriteLine("- {0}", shellCommand.Usage);
             }
 
             Console.WriteLine();
@@ -93,12 +102,19 @@ namespace AsbaBank.Presentation.Shell
 
             foreach (var systemCommand in Environment.GetSystemCommands())
             {
-                Console.WriteLine(systemCommand.Usage);
+                Console.WriteLine("- {0}", systemCommand.Usage);
             }
 
-            Console.ForegroundColor = originalColor;
+            Console.WriteLine();
+            Console.WriteLine("Views:");
+
+            foreach (var view in Environment.GetViews())
+            {
+                Console.WriteLine("- {0}", view.Usage);
+            }
+
             Console.WriteLine();
             Console.WriteLine();
         }
-    }    
+    }
 }

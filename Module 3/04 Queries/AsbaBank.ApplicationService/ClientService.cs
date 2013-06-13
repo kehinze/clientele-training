@@ -22,7 +22,7 @@ namespace AsbaBank.ApplicationService
 
         public void Execute(RegisterClient command)
         {
-            IRepository<Client> clientRepository = unitOfWork.GetRepository<Client>();
+            IRepository<Client> clientRepository = unitOfWork.CreateRepository<Client>();
 
             try
             {
@@ -41,7 +41,7 @@ namespace AsbaBank.ApplicationService
 
         public void Execute(UpdateClientAddress command)
         {
-            IRepository<Client> clientRepository = unitOfWork.GetRepository<Client>();
+            IRepository<Client> clientRepository = unitOfWork.CreateRepository<Client>();
             Client client = clientRepository.Get(command.ClientId);
 
             try
