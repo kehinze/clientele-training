@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AsbaBank.Core.Commands
 {
@@ -23,7 +24,7 @@ namespace AsbaBank.Core.Commands
 
         public override string ToString()
         {
-            return String.Join(", ", Roles);
+            return String.Join(", ", Roles.Select(s => s.ToUpper()));
         }
     }
 }

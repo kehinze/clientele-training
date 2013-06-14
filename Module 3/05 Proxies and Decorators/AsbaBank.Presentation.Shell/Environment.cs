@@ -78,7 +78,11 @@ namespace AsbaBank.Presentation.Shell
         public static IPublishCommands GetCommandPublisher()
         {
             var unitOfWork = new EntityFrameworkUnitOfWork(ContextFactory);
-            var commandPublisher = new CommandPublisherLoggerDecorator(new CommandPublisherAuthorizerProxy(GetCurrentUserSession()));
+            
+            IPublishCommands commandPublisher = new CommandPublisherAuthorizerProxy(GetCurrentUserSession());
+            commandPublisher = new CommandPublisherLoggerDecorator(commandPublisher);
+            commandPublisher = new RetryPublisher(commandPublisher, unitOfWork);
+
             commandPublisher.Subscribe(new ClientService(unitOfWork));
 
             return commandPublisher;

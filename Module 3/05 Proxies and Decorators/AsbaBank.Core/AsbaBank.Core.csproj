@@ -39,7 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionRetry.cs" />
     <Compile Include="Commands\CommandAuthorizeAttribute.cs" />
+    <Compile Include="Commands\CommandRetryAttribute.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\IHandleCommand.cs" />
     <Compile Include="ICurrentUserSession.cs" />

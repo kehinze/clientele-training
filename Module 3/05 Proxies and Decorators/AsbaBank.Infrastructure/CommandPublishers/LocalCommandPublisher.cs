@@ -5,7 +5,7 @@ using AsbaBank.Core;
 using AsbaBank.Core.Commands;
 
 namespace AsbaBank.Infrastructure.CommandPublishers
-{
+{ 
     public class LocalCommandPublisher : IPublishCommands
     {
         private readonly HashSet<object> handlers;

@@ -23,19 +23,11 @@ namespace AsbaBank.ApplicationService
         {
             IRepository<Client> clientRepository = unitOfWork.GetRepository<Client>();
 
-            try
-            {
-                var client = new Client(command.ClientName, command.ClientSurname, command.PhoneNumber);
-                clientRepository.Add(client);
-                unitOfWork.Commit();
+            var client = new Client(command.ClientName, command.ClientSurname, command.PhoneNumber);
+            clientRepository.Add(client);
+            unitOfWork.Commit();
 
-                Logger.Verbose("Registered client {0} {1} with Id {2}", client.Name, client.Surname, client.Id);
-            }
-            catch
-            {
-                unitOfWork.Rollback();
-                throw;
-            }
+            Logger.Verbose("Registered client {0} {1} with Id {2}", client.Name, client.Surname, client.Id);
         }
 
         public void Execute(UpdateClientAddress command)
@@ -43,18 +35,10 @@ namespace AsbaBank.ApplicationService
             IRepository<Client> clientRepository = unitOfWork.GetRepository<Client>();
             Client client = clientRepository.Get(command.ClientId);
 
-            try
-            {
-                client.UpdateAddress(command.StreetNumber, command.Street, command.City, command.PostalCode);
-                unitOfWork.Commit();
+            client.UpdateAddress(command.StreetNumber, command.Street, command.City, command.PostalCode);
+            unitOfWork.Commit();
 
-                Logger.Verbose("Updated client address.");
-            }
-            catch
-            {
-                unitOfWork.Rollback();
-                throw;
-            }
+            Logger.Verbose("Updated client address.");
         }
     }
 }
