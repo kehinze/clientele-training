@@ -47,8 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandPublishers\CommandAuthorizer.cs" />
-    <Compile Include="CommandPublishers\RetryPublisher.cs" />
-    <Compile Include="CommandPublishers\CommandPublisherLoggerDecorator.cs" />
+    <Compile Include="CommandPublishers\CommandRetry.cs" />
+    <Compile Include="CommandPublishers\CommandLogger.cs" />
     <Compile Include="ConsoleWindowLogger.cs" />
     <Compile Include="InMemory\InMemoryDataStore.cs" />
     <Compile Include="InMemory\InMemoryUnitOfWork.cs" />

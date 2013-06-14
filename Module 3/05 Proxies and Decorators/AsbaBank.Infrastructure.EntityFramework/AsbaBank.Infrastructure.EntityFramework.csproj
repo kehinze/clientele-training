@@ -62,6 +62,10 @@
       <Project>{CBF7366C-BA37-4E0A-A523-D948A9640D5B}</Project>
       <Name>AsbaBank.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AsbaBank.Infrastructure\AsbaBank.Infrastructure.csproj">
+      <Project>{88336594-86D7-438D-983F-7828F2765E41}</Project>
+      <Name>AsbaBank.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

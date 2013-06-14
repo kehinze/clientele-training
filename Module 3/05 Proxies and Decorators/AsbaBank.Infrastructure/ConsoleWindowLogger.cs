@@ -26,7 +26,7 @@ namespace AsbaBank.Infrastructure
 
         public virtual void Info(string message, params object[] values)
         {
-            this.Log(ConsoleColor.White, message, values);
+            this.Log(ConsoleColor.DarkCyan, message, values);
         }
 
         public virtual void Warn(string message, params object[] values)

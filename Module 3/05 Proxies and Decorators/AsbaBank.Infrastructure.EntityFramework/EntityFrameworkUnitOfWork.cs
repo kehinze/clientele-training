@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Data.Entity;
 using AsbaBank.Core;
+using AsbaBank.Infrastructure.Logging;
 
 namespace AsbaBank.Infrastructure.EntityFramework
 {
     public class EntityFrameworkUnitOfWork : IUnitOfWork, IDisposable
     {
+        private static readonly ILog Logger = LogFactory.BuildLogger(typeof(EntityFrameworkUnitOfWork));
         private readonly IContextFactory contextFactory;
         private DbContext context;
         private bool isDisposed;
@@ -17,14 +19,16 @@ namespace AsbaBank.Infrastructure.EntityFramework
         }
 
         public void Commit()
-        {
+        {            
             context.SaveChanges();
+            Logger.Verbose("Commited changes.");
         }
 
         public void Rollback()
         {
             context.Dispose();
             context = contextFactory.GetContext();
+            Logger.Verbose("Rolled back all changes.");
         }
 
         public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class

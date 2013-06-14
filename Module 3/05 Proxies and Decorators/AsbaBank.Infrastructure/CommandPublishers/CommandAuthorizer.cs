@@ -2,30 +2,24 @@
 using System.Linq;
 using AsbaBank.Core;
 using AsbaBank.Core.Commands;
-using AsbaBank.Infrastructure.Logging;
 
 namespace AsbaBank.Infrastructure.CommandPublishers
 {
-    public class CommandPublisherAuthorizerProxy : LocalCommandPublisher
+    public class CommandPublisherAuthorizer : IPublishCommands
     {
         private readonly ICurrentUserSession currentUser;
-        private readonly LocalCommandPublisher publisher;
-        private static readonly ILog Logger = LogFactory.BuildLogger(typeof(CommandPublisherAuthorizerProxy));
+        private readonly IPublishCommands publisher;
 
-        public CommandPublisherAuthorizerProxy(ICurrentUserSession currentUser)
+        public CommandPublisherAuthorizer(IPublishCommands publisher, ICurrentUserSession currentUser)
         {
+            this.publisher = publisher;
             this.currentUser = currentUser;
-            publisher = new LocalCommandPublisher();
         }
 
-        public override void Publish(ICommand command)
+        public void Publish(ICommand command)
         {
-            Logger.Verbose("Authorizing command", command.GetType());
-
             Authorize(command);
             publisher.Publish(command);
-
-            Logger.Verbose("Command was allowed to execute.", command.GetType());
         }
 
         private void Authorize(ICommand command)
@@ -38,13 +32,13 @@ namespace AsbaBank.Infrastructure.CommandPublishers
                 return;
             }
 
-            Logger.Error("User {0} attempted to execute command {1} which requires roles {2}",
-                         currentUser, command.GetType().Name, authorizeAttribute);
+            string message = String.Format("User {0} attempted to execute command {1} which requires roles {2}",
+                                           currentUser, command.GetType().Name, authorizeAttribute);
 
-            throw new Exception("You are not authorized to execute this command.");
+            throw new Exception(message);
         }
 
-        public override void Subscribe(object handler)
+        public void Subscribe(object handler)
         {
             publisher.Subscribe(handler);
         }

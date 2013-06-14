@@ -7,21 +7,29 @@ using AsbaBank.Infrastructure.Logging;
 
 namespace AsbaBank.Infrastructure.CommandPublishers
 {
-    public class CommandPublisherLoggerDecorator : IPublishCommands
+    public class CommandLogger : IPublishCommands
     {
         private readonly IPublishCommands publisher;
-        private static readonly ILog Logger = LogFactory.BuildLogger(typeof (CommandPublisherLoggerDecorator));
+        private static readonly ILog Logger = LogFactory.BuildLogger(typeof (CommandLogger));
 
-        public CommandPublisherLoggerDecorator(IPublishCommands publisher)
+        public CommandLogger(IPublishCommands publisher)
         {
             this.publisher = publisher;
         }
 
         public void Publish(ICommand command)
         {
-            Logger.Verbose("Publishing command {0}", command.GetType().Name);
-            publisher.Publish(command);
-            Logger.Verbose("Completed publishing command {0}", command.GetType().Name);
+            try
+            {
+                Logger.Verbose("Publishing command {0}", command.GetType().Name);
+                publisher.Publish(command);
+                Logger.Verbose("Completed publishing command {0}", command.GetType().Name);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Error: {0}", ex.Message);
+                throw;
+            }
         }
 
         public void Subscribe(object handler)

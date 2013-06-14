@@ -8,10 +8,12 @@ namespace AsbaBank.Infrastructure.CommandPublishers
 { 
     public class LocalCommandPublisher : IPublishCommands
     {
+        private readonly IUnitOfWork unitOfWork;
         private readonly HashSet<object> handlers;
 
-        public LocalCommandPublisher()
+        public LocalCommandPublisher(IUnitOfWork unitOfWork)
         {
+            this.unitOfWork = unitOfWork;
             handlers = new HashSet<object>();
         }
 
@@ -26,7 +28,16 @@ namespace AsbaBank.Infrastructure.CommandPublishers
             Type handlerType = handlerGenericType.MakeGenericType(new[] { command.GetType() });
             object handler = handlers.Single(handlerType.IsInstanceOfType);
 
-            ((dynamic)handler).Execute((dynamic)command);
+            try
+            {
+                ((dynamic)handler).Execute((dynamic)command);
+                unitOfWork.Commit();
+            }
+            catch
+            {
+                unitOfWork.Rollback();
+                throw;
+            }
         }
     }
 }

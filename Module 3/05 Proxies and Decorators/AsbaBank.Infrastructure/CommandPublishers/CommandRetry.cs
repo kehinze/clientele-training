@@ -5,15 +5,13 @@ using AsbaBank.Core.Commands;
 
 namespace AsbaBank.Infrastructure.CommandPublishers
 {
-    public class RetryPublisher : IPublishCommands
+    public class CommandRetry : IPublishCommands
     {
         private readonly IPublishCommands publisher;
-        private readonly IUnitOfWork unitOfWork;
 
-        public RetryPublisher(IPublishCommands publisher, IUnitOfWork unitOfWork)
+        public CommandRetry(IPublishCommands publisher)
         {
             this.publisher = publisher;
-            this.unitOfWork = unitOfWork;
         }
 
         public void Publish(ICommand command)
@@ -27,10 +25,8 @@ namespace AsbaBank.Infrastructure.CommandPublishers
             }
             else
             {
-                var publish = new Action(() => publisher.Publish(command));
-                var rollback = new Action<Exception>(e => unitOfWork.Rollback());
-
-                Retry.Action(publish, rollback, attribute.RetryCount, attribute.RetryMilliseconds);
+                var publishAction = new Action(() => publisher.Publish(command));
+                Retry.Action(publishAction, attribute.RetryCount, attribute.RetryMilliseconds);
             }
         }
 

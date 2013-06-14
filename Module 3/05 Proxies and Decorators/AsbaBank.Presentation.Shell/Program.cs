@@ -20,7 +20,7 @@ namespace AsbaBank.Presentation.Shell
         {
             IntialSetup();
 
-            Environment.SetCurrentUserRole(UserRole.Guest);
+            Environment.SetCurrentUserRole(UserRole.Administrator);
 
             while (true)
             {
