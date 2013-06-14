@@ -1,8 +1,12 @@
-﻿namespace AsbaBank.Infrastructure.CommandPublishers
+﻿using System.Collections.Generic;
+using System.Security.Principal;
+
+namespace AsbaBank.Core
 {
-    public interface ICurrentUserSession
+    public interface ICurrentUserSession: IPrincipal
     {
-        string UserName { get; }
-        string Role { get; }
+        //here we can define additional properties such as user preferences, session keys etc.
+
+        bool IsInRole(IEnumerable<string> roles);
     }
 }

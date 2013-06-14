@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Data.Entity;
+using System.Linq;
+using System.Security.Principal;
 using AsbaBank.ApplicationService;
 using AsbaBank.Core;
 using AsbaBank.DataModel;
-using AsbaBank.Infrastructure;
 using AsbaBank.Infrastructure.CommandPublishers;
 using AsbaBank.Infrastructure.CommandScripts;
 using AsbaBank.Infrastructure.EntityFramework;
@@ -13,7 +13,7 @@ using AsbaBank.Presentation.Shell.SystemCommands;
 using AsbaBank.Queries;
 
 namespace AsbaBank.Presentation.Shell
-{
+{    
     public static class Environment
     {
         private static readonly Dictionary<string, ICommandBuilder> CommandBuilders;
@@ -21,6 +21,7 @@ namespace AsbaBank.Presentation.Shell
         private static readonly Dictionary<string, IConsoleView> ConsoleViews; 
         private static readonly ScriptRecorder ScriptRecorder;
         private static readonly IContextFactory ContextFactory;
+        private static CurrentUserSession currentUserSession;
 
         static Environment()
         {
@@ -31,8 +32,8 @@ namespace AsbaBank.Presentation.Shell
             RegsiterSystemCommands();
             RegsiterCommandBuilders();
             RegisterViews();
-
             ContextFactory = new ContextFactory<AsbaContext>("AsbaBank");
+            currentUserSession = new CurrentUserSession(new GenericIdentity(System.Environment.UserDomainName));
         }
 
         public static IEnumerable<ICommandBuilder> GetShellCommands()
@@ -48,18 +49,7 @@ namespace AsbaBank.Presentation.Shell
         public static ICommandBuilder GetShellCommand(string command)
         {
             return CommandBuilders[command.ToUpper()];
-        }
-
-        private static void RegisterViews()
-        {
-            RegisterView(new AllClientsView(GetClientQueries()));
-            RegisterView(new ClientsWithNameView(GetClientQueries()));
-        }
-
-        private static void RegisterView(IConsoleView view)
-        {
-            ConsoleViews.Add(view.Key.ToUpper(), view);
-        }
+        }       
 
         private static void RegsiterSystemCommands()
         {
@@ -87,20 +77,22 @@ namespace AsbaBank.Presentation.Shell
 
         public static IPublishCommands GetCommandPublisher()
         {
-            var commandPublisher = new CommandPublisherAuthorizerProxy(GetCurrentUserSession());
             var unitOfWork = new EntityFrameworkUnitOfWork(ContextFactory);
+            var commandPublisher = new CommandPublisherLoggerDecorator(new CommandPublisherAuthorizerProxy(GetCurrentUserSession()));
             commandPublisher.Subscribe(new ClientService(unitOfWork));
 
-            return new CommandPublisherLoggerDecorator(commandPublisher);
+            return commandPublisher;
+        }
+
+        public static void SetCurrentUserRole(params UserRole[] role)
+        {
+            var roles = role.Select(userRole => userRole.ToString()).ToArray();
+            currentUserSession = new CurrentUserSession(new GenericIdentity(System.Environment.UserDomainName), roles);
         }
 
         public static ICurrentUserSession GetCurrentUserSession()
         {
-            return new CurrentUserSession
-            {
-                Role = "Guest",
-                UserName = "Clientele\\AFreemantle"
-            };
+            return currentUserSession;
         }
 
         public static ScriptPlayer GetScriptPlayer()
@@ -132,6 +124,17 @@ namespace AsbaBank.Presentation.Shell
         private static EntityFrameworkQuery GetEntityFrameworkQuery()
         {
             return new EntityFrameworkQuery(new ContextFactory<AsbaContext>("AsbaBank"));
+        }
+
+        private static void RegisterViews()
+        {
+            RegisterView(new AllClientsView(GetClientQueries()));
+            RegisterView(new ClientsWithNameView(GetClientQueries()));
+        }
+
+        private static void RegisterView(IConsoleView view)
+        {
+            ConsoleViews.Add(view.Key.ToUpper(), view);
         }
 
         public static IEnumerable<IConsoleView> GetViews()

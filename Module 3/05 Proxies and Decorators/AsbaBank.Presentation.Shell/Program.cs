@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-
+using AsbaBank.ApplicationService;
 using AsbaBank.Core;
 using AsbaBank.Core.Commands;
 using AsbaBank.Infrastructure;
@@ -18,13 +18,9 @@ namespace AsbaBank.Presentation.Shell
 
         static void Main()
         {
-            LogFactory.BuildLogger = type => new ConsoleWindowLogger(type);
-            logger = LogFactory.BuildLogger(typeof(Program));
+            IntialSetup();
 
-            Console.WindowHeight = 40;
-            Console.WindowWidth = 120;
-
-            PrintHelp();
+            Environment.SetCurrentUserRole(UserRole.Guest);
 
             while (true)
             {
@@ -45,6 +41,16 @@ namespace AsbaBank.Presentation.Shell
 
                 Console.WriteLine();
             }
+        }
+
+        private static void IntialSetup()
+        {
+            LogFactory.BuildLogger = type => new ConsoleWindowLogger(type);
+            logger = LogFactory.BuildLogger(typeof (Program));
+            Console.WindowHeight = 40;
+            Console.WindowWidth = 120;
+            
+            PrintHelp();
         }
 
         private static void TryHandleRequest(string[] split)

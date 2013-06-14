@@ -1,15 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AsbaBank.Core.Commands
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class CommandAuthorizeAttribute : Attribute
     {
-        public string Role { get; private set; }
+        public HashSet<string> Roles { get; private set; }
 
         public CommandAuthorizeAttribute(string role)
         {
-            Role = role;
+            Roles = new HashSet<string>
+            {
+                role
+            };
+        }
+
+        public CommandAuthorizeAttribute(params string[] roles)
+        {
+            Roles = new HashSet<string>(roles);
+        }
+
+        public override string ToString()
+        {
+            return String.Join(", ", Roles);
         }
     }
 }

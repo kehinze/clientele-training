@@ -6,6 +6,7 @@ using AsbaBank.Core.Commands;
 namespace AsbaBank.ApplicationService.Commands
 {
     [DataContract]
+    [CommandAuthorize("Administrator")]
     public class RegisterClient : ICommand
     {
         [DataMember]

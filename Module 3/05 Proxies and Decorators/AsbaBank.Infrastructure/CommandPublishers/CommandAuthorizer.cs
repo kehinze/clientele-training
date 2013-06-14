@@ -23,8 +23,9 @@ namespace AsbaBank.Infrastructure.CommandPublishers
             Logger.Verbose("Authorizing command", command.GetType());
 
             Authorize(command);
-
             publisher.Publish(command);
+
+            Logger.Verbose("Command was allowed to execute.", command.GetType());
         }
 
         private void Authorize(ICommand command)
@@ -32,13 +33,13 @@ namespace AsbaBank.Infrastructure.CommandPublishers
             var authorizeAttribute = Attribute.GetCustomAttributes(command.GetType())
                 .FirstOrDefault(a => a is CommandAuthorizeAttribute) as CommandAuthorizeAttribute;
 
-            if (authorizeAttribute == null || authorizeAttribute.Role == currentUser.Role)
+            if (authorizeAttribute == null || currentUser.IsInRole(authorizeAttribute.Roles))
             {
                 return;
             }
 
-            Logger.Error("User {0} with role {1} attempted to execute command {2} which requires role {3}",
-                         currentUser.UserName, currentUser.Role, command.GetType().Name, authorizeAttribute.Role);
+            Logger.Error("User {0} attempted to execute command {1} which requires roles {2}",
+                         currentUser, command.GetType().Name, authorizeAttribute);
 
             throw new Exception("You are not authorized to execute this command.");
         }

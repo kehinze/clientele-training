@@ -5,7 +5,7 @@ using AsbaBank.Core.Commands;
 namespace AsbaBank.ApplicationService.Commands
 {
     [DataContract]
-    [CommandAuthorize("Administrator")]
+    [CommandAuthorize("Administrator", "Guest")]
     public class UpdateClientAddress : ICommand
     {
         [DataMember]
