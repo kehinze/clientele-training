@@ -1,1 +1,0 @@
-﻿<%@ ServiceHost Language="C#" Debug="true" Service="AsbaBank.ApplicationService.Host.MessageBus" CodeBehind="MessageBus.svc.cs" %>
