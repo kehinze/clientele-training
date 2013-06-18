@@ -84,6 +84,8 @@ namespace AsbaBank.Infrastructure.CommandPublishers
                 ((dynamic)handler).Execute((dynamic)data);
             }
         }
+
+        //this could be simplyfied
         private object GetHandlerForCommand(string commandName)
         {
             foreach (var handler in handlers)
@@ -106,6 +108,7 @@ namespace AsbaBank.Infrastructure.CommandPublishers
             throw new InvalidOperationException(string.Format("No handler found for the command {0}", commandName));
         }
 
+        //this could be simplyfied
         public Type GetPayloadTypeFromCommandName(string commandName)
         {
             foreach (var handler in handlers)
