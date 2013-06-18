@@ -11,6 +11,7 @@ using AsbaBank.Presentation.Shell.ConsoleViews;
 using AsbaBank.Presentation.Shell.ShellCommands;
 using AsbaBank.Presentation.Shell.SystemCommands;
 using AsbaBank.Queries;
+using AsbaBank.ApplicationService.Commands;
 
 namespace AsbaBank.Presentation.Shell
 {    
@@ -74,13 +75,19 @@ namespace AsbaBank.Presentation.Shell
         {
             CommandBuilders.Add(commandBuilder.Key.ToUpper(), commandBuilder);
         }
+        //testcode
+        public static IUnitOfWork GetUnitOfWorkTestCode()
+        {
+            return new EntityFrameworkUnitOfWork(ContextFactory);
+        }
 
         public static IPublishCommands GetCommandPublisher()
         {
             var unitOfWork = new EntityFrameworkUnitOfWork(ContextFactory);
 
-            IPublishCommands commandPublisher = new LocalCommandPublisher(unitOfWork);
+            IPublishCommands commandPublisher = new CommandPublisherProxy();
             commandPublisher = new CommandPublisherAuthorizer(commandPublisher, currentUserSession);
+            commandPublisher = new CommandRequestLogger(commandPublisher, currentUserSession, typeof(NewRequest));
             commandPublisher = new CommandLogger(commandPublisher);
             commandPublisher = new CommandRetry(commandPublisher);
             commandPublisher.Subscribe(new ClientService(unitOfWork));

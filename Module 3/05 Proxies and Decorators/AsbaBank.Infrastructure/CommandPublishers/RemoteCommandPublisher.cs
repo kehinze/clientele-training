@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using AsbaBank.Core;
 using AsbaBank.Core.Commands;
 
 namespace AsbaBank.Infrastructure.CommandPublishers
-{ 
-    public class LocalCommandPublisher : IPublishCommands
+{
+    public class RemoteCommandPublisher : IPublishCommands
     {
         private readonly HashSet<object> handlers;
 
-        public LocalCommandPublisher()
+        public RemoteCommandPublisher()
         {
             handlers = new HashSet<object>();
         }

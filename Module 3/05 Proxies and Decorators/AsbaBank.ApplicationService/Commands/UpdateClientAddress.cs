@@ -4,6 +4,7 @@ using AsbaBank.Core.Commands;
 
 namespace AsbaBank.ApplicationService.Commands
 {
+    [Serializable]
     [DataContract]
     [CommandAuthorize("Administrator", "Guest")]
     public class UpdateClientAddress : ICommand

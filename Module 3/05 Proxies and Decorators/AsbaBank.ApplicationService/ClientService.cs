@@ -10,7 +10,8 @@ namespace AsbaBank.ApplicationService
 {
     public class ClientService : 
         IHandleCommand<RegisterClient>,
-        IHandleCommand<UpdateClientAddress>
+        IHandleCommand<UpdateClientAddress>,
+        IHandleCommand<NewRequest>
     {
         private readonly IUnitOfWork unitOfWork;
         private static readonly ILog Logger = LogFactory.BuildLogger(typeof(ClientService));
@@ -27,7 +28,7 @@ namespace AsbaBank.ApplicationService
             var client = new Client(command.ClientName, command.ClientSurname, command.PhoneNumber);
             clientRepository.Add(client);
             
-            SimulateTransientError();
+        //    SimulateTransientError();
 
             unitOfWork.Commit();
 
@@ -52,6 +53,16 @@ namespace AsbaBank.ApplicationService
             unitOfWork.Commit();
 
             Logger.Info("Updated client address.");
+        }
+
+        public void Execute(NewRequest command)
+        {
+            IRepository<Request> requestRepository = unitOfWork.GetRepository<Request>();
+
+            requestRepository.Add(command.Request);
+            unitOfWork.Commit();
+
+            Logger.Info("Request logged succesfully.");
         }
     }
 }

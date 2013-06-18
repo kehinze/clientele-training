@@ -47,8 +47,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandPublishers\CommandAuthorizer.cs" />
+    <Compile Include="CommandPublishers\CommandPublisherProxy.cs" />
+    <Compile Include="CommandPublishers\CommandRequestLogger.cs" />
     <Compile Include="CommandPublishers\CommandRetry.cs" />
     <Compile Include="CommandPublishers\CommandLogger.cs" />
+    <Compile Include="CommandPublishers\LocalFileCommandPublisher.cs" />
+    <Compile Include="CommandPublishers\LocalFileSubscriber.cs" />
+    <Compile Include="CommandPublishers\RemoteCommandPublisher.cs" />
     <Compile Include="ConsoleWindowLogger.cs" />
     <Compile Include="InMemory\InMemoryDataStore.cs" />
     <Compile Include="InMemory\InMemoryUnitOfWork.cs" />

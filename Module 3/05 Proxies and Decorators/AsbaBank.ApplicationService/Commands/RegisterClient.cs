@@ -5,9 +5,12 @@ using AsbaBank.Core.Commands;
 
 namespace AsbaBank.ApplicationService.Commands
 {
+    
     [DataContract]
     [CommandAuthorize("Administrator")]
     [CommandRetry(RetryCount = 3, RetryMilliseconds = 1000)]
+    [CommandRequest]
+    [Serializable]
     public class RegisterClient : ICommand
     {
         [DataMember]

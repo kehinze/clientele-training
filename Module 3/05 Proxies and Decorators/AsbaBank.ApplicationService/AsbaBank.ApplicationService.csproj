@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\NewRequest.cs" />
     <Compile Include="Commands\RegisterClient.cs" />
     <Compile Include="Commands\UpdateClientAddress.cs" />
     <Compile Include="ClientService.cs" />

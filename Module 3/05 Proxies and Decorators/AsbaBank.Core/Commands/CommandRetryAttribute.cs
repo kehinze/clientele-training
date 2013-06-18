@@ -8,6 +8,4 @@ namespace AsbaBank.Core.Commands
         public int RetryCount { get; set; }
         public int RetryMilliseconds { get; set; }
     }
-
-
 }

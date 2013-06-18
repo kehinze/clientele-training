@@ -2,10 +2,13 @@
 using System.Linq;
 using System.Threading;
 using AsbaBank.ApplicationService;
+using AsbaBank.ApplicationService.Commands;
 using AsbaBank.Core;
 using AsbaBank.Core.Commands;
 using AsbaBank.Infrastructure;
+using AsbaBank.Infrastructure.CommandPublishers;
 using AsbaBank.Infrastructure.CommandScripts;
+using AsbaBank.Infrastructure.EntityFramework;
 using AsbaBank.Infrastructure.Logging;
 
 namespace AsbaBank.Presentation.Shell
@@ -20,7 +23,7 @@ namespace AsbaBank.Presentation.Shell
         {
             IntialSetup();
 
-            Environment.SetCurrentUserRole(UserRole.Guest);
+            Environment.SetCurrentUserRole(UserRole.Administrator);
 
             while (true)
             {
